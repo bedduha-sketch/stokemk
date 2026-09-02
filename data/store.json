@@ -2720,13 +2720,13 @@
       "name": "ESSENCE V2 KAPAK BEYAZ",
       "category_id": "id-0n4eyff9mtk34t8o",
       "unit": "adet",
-      "quantity": 8,
+      "quantity": 4,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "SERVICE COVER ESSENCE V2, WHITE (RAL9010)",
       "created_at": "2026-09-02T12:41:24.744Z",
-      "updated_at": "2026-09-02T12:41:24.744Z"
+      "updated_at": "2026-09-02T12:41:58.808Z"
     },
     {
       "id": "id-ytznqoykmtk34t8o",
@@ -4997,6 +4997,20 @@
       "user_name": "CAN EKEYILMAZ",
       "happened_at": "2026-09-02T12:41:44.562Z",
       "created_at": "2026-09-02T12:41:44.562Z"
+    },
+    {
+      "id": "id-8dpd1ni5mtk35jiw",
+      "product_id": "id-toxj512jmtk34t8o",
+      "product_code": "4827614A",
+      "product_name": "ESSENCE V2 KAPAK BEYAZ",
+      "type": "out",
+      "quantity": 4,
+      "target_location": "le meridyen bodrum",
+      "reason": "arızalı malzeme için",
+      "user_id": "id-tejy3dmpmtk2yr8i",
+      "user_name": "CAN EKEYILMAZ",
+      "happened_at": "2026-09-02T12:41:58.808Z",
+      "created_at": "2026-09-02T12:41:58.808Z"
     }
   ],
   "settings": {
