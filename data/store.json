@@ -1,0 +1,79 @@
+{
+  "users": [
+    {
+      "id": "id-r42hkughmtk2ydks",
+      "username": "admin",
+      "password": "$2a$10$/qLNYolhSeVw9CJ17x5uQ.vyWV///QEcDMvIpNKUFii36zLWX15nK",
+      "name": "Yönetici",
+      "role": "admin",
+      "is_active": true,
+      "created_at": "2026-09-02T12:36:24.589Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "id-h8b5ypuvmtk2ydn2",
+      "name": "Genel",
+      "color": "#2563EB"
+    }
+  ],
+  "locations": [
+    {
+      "id": "id-kjaaz7ntmtk2ydn2",
+      "name": "Ana Depo",
+      "kind": "depo",
+      "auto_created": false
+    }
+  ],
+  "products": [],
+  "movements": [],
+  "settings": {
+    "app_title": "Vincard Stok Takip",
+    "primary_color": "#2563EB",
+    "widgets": {
+      "total_products": true,
+      "total_stock_value": true,
+      "low_stock_count": true,
+      "today_movements_count": true,
+      "low_stock_list": true,
+      "recent_additions": true,
+      "valuable_products": true,
+      "category_distribution": true
+    },
+    "menus": {
+      "dashboard": true,
+      "products": true,
+      "movements": true,
+      "reports": true
+    },
+    "cols": {
+      "products": {
+        "code": true,
+        "name": true,
+        "category": true,
+        "quantity": true,
+        "critical": true,
+        "unit_price": true,
+        "total_value": true
+      },
+      "movements": {
+        "date": true,
+        "user": true,
+        "product": true,
+        "type": true,
+        "quantity": true,
+        "location": true,
+        "reason": true
+      },
+      "reports": {
+        "date": true,
+        "user": true,
+        "product": true,
+        "type": true,
+        "quantity": true,
+        "location": true,
+        "reason": true
+      }
+    }
+  }
+}
