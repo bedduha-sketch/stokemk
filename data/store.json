@@ -5054,7 +5054,7 @@
       "today_movements_count": true,
       "low_stock_list": true,
       "recent_additions": true,
-      "valuable_products": false,
+      "valuable_products": true,
       "category_distribution": true
     },
     "menus": {
