@@ -353,6 +353,12 @@
       "name": "Ana Depo",
       "kind": "depo",
       "auto_created": false
+    },
+    {
+      "id": "id-j7n2hrj0mtk358j6",
+      "name": "le meridyen bodrum",
+      "kind": "diger",
+      "auto_created": true
     }
   ],
   "products": [
@@ -2154,13 +2160,13 @@
       "name": "4.5V PİL KASETİ KABLOLU YENİ TİP",
       "category_id": "id-g0rn6savmtk34t8o",
       "unit": "adet",
-      "quantity": 312,
+      "quantity": 311,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "BATTERY HOLDER 4.5V W/CABLE",
       "created_at": "2026-09-02T12:41:24.744Z",
-      "updated_at": "2026-09-02T12:41:24.744Z"
+      "updated_at": "2026-09-02T12:41:44.562Z"
     },
     {
       "id": "id-8hy798kgmtk34t8o",
@@ -4977,7 +4983,22 @@
       "updated_at": "2026-09-02T12:41:24.745Z"
     }
   ],
-  "movements": [],
+  "movements": [
+    {
+      "id": "id-j1q8f2a7mtk358j6",
+      "product_id": "id-mfoushezmtk34t8o",
+      "product_code": "4825011",
+      "product_name": "4.5V PİL KASETİ KABLOLU YENİ TİP",
+      "type": "out",
+      "quantity": 1,
+      "target_location": "le meridyen bodrum",
+      "reason": "arızalı malzeme için",
+      "user_id": "id-tejy3dmpmtk2yr8i",
+      "user_name": "CAN EKEYILMAZ",
+      "happened_at": "2026-09-02T12:41:44.562Z",
+      "created_at": "2026-09-02T12:41:44.562Z"
+    }
+  ],
   "settings": {
     "app_title": "Vincard Stok Takip",
     "primary_color": "#2563EB",
