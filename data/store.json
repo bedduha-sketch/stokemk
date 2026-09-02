@@ -414,12 +414,12 @@
       "category_id": "id-fzyrvbu6mtk34t8m",
       "unit": "adet",
       "quantity": 2002,
-      "critical_level": 0,
+      "critical_level": 2000,
       "unit_price": 0,
       "location": "",
       "description": "RFID KEYCARD MIFARE CLASSIC 4K WHITE",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-02T12:41:24.743Z"
+      "updated_at": "2026-09-02T13:03:23.862Z"
     },
     {
       "id": "id-qogubx21mtk34t8n",
