@@ -8,6 +8,16 @@
       "role": "admin",
       "is_active": true,
       "created_at": "2026-09-02T12:36:24.589Z"
+    },
+    {
+      "id": "id-tejy3dmpmtk2yr8i",
+      "username": "Can",
+      "name": "CAN EKEYILMAZ",
+      "email": "",
+      "role": "admin",
+      "is_active": true,
+      "password": "$2a$10$vExtdbYqBWwAJYQsPoR6G.wVIufR.YliyTmajCh6t2EFyf22BHD.a",
+      "created_at": "2026-09-02T12:36:42.282Z"
     }
   ],
   "categories": [
