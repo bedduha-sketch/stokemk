@@ -3,11 +3,12 @@
     {
       "id": "id-r42hkughmtk2ydks",
       "username": "admin",
-      "password": "$2a$10$/qLNYolhSeVw9CJ17x5uQ.vyWV///QEcDMvIpNKUFii36zLWX15nK",
+      "password": "$2a$10$l4/Su7eqnDWLko.wB8V13Oe1V2HImTXR4U.YxkGxSnYENyybS22AO",
       "name": "Yönetici",
       "role": "admin",
       "is_active": true,
-      "created_at": "2026-09-02T12:36:24.589Z"
+      "created_at": "2026-09-02T12:36:24.589Z",
+      "email": ""
     },
     {
       "id": "id-tejy3dmpmtk2yr8i",
