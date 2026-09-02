@@ -399,7 +399,7 @@
       "name": "RFID UL GUEST BASKISIZ KART",
       "category_id": "id-fzyrvbu6mtk34t8m",
       "unit": "adet",
-      "quantity": 3297,
+      "quantity": 3298,
       "critical_level": 2000,
       "unit_price": 50,
       "location": "Ana Depo",
@@ -5042,20 +5042,6 @@
       "user_name": "eray yurtseven",
       "happened_at": "2026-09-02T13:05:31.763Z",
       "created_at": "2026-09-02T13:05:31.763Z"
-    },
-    {
-      "id": "id-bcilrhxemtk405zg",
-      "product_id": "id-ld5cte1jmtk34t8m",
-      "product_code": "4817691",
-      "product_name": "RFID UL GUEST BASKISIZ KART",
-      "type": "out",
-      "quantity": 1,
-      "target_location": null,
-      "reason": null,
-      "user_id": "id-27ioxuxcmtk3do6i",
-      "user_name": "eray yurtseven",
-      "happened_at": "2026-09-02T13:05:47.596Z",
-      "created_at": "2026-09-02T13:05:47.596Z"
     }
   ],
   "settings": {
