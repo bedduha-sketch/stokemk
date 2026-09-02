@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vincard Stok Takip — GitHub Sync</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root { --primary:#2563EB; --primary-hover:#1D4ED8; --bg:#F8FAFC; --surface:#FFFFFF; --border:#E2E8F0; --text:#0F172A; --muted:#475569; --success:#059669; --warning:#D97706; --danger:#DC2626; }
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Inter',ui-sans-serif,system-ui,sans-serif;}
+  h1,h2,h3,h4{font-family:'Outfit',ui-sans-serif,system-ui,sans-serif;letter-spacing:-0.02em;}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;}
+  .grid-pattern{background-image:linear-gradient(to right,rgba(37,99,235,.06) 1px,transparent 1px),linear-gradient(to bottom,rgba(37,99,235,.06) 1px,transparent 1px);background-size:32px 32px;}
+  .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;border-radius:.5rem;font-weight:600;font-size:.875rem;transition:.15s;cursor:pointer;border:1px solid transparent;}
+  .btn-primary{background:var(--primary);color:#fff;} .btn-primary:hover{background:var(--primary-hover);}
+  .btn-ghost{background:transparent;color:var(--text);} .btn-ghost:hover{background:#f1f5f9;}
+  .btn-outline{border-color:var(--border);background:#fff;} .btn-outline:hover{background:#f8fafc;}
+  .btn-success{background:var(--success);color:#fff;} .btn-success:hover{filter:brightness(.94);}
+  .btn-danger{background:var(--danger);color:#fff;} .btn-danger:hover{filter:brightness(.94);}
+  .btn-warn{background:var(--warning);color:#fff;} .btn-warn:hover{filter:brightness(.94);}
+  .btn-sm{padding:.35rem .7rem;font-size:.8rem;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:.75rem;}
+  .input,select.input,textarea.input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:.5rem;background:#fff;font-size:.9rem;outline:none;}
+  .input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+  .badge{display:inline-flex;align-items:center;padding:.15rem .55rem;border-radius:.375rem;font-size:.72rem;font-weight:600;}
+  .nav-link{display:flex;align-items:center;gap:.75rem;padding:.55rem .8rem;border-radius:.5rem;font-size:.9rem;color:var(--muted);cursor:pointer;transition:.15s;}
+  .nav-link:hover{background:#f1f5f9;color:var(--text);}
+  .nav-link.active{background:var(--primary);color:#fff;font-weight:600;}
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:.7rem .9rem;background:#f8fafc;font-weight:600;}
+  td{padding:.7rem .9rem;border-top:1px solid var(--border);font-size:.875rem;vertical-align:middle;}
+  .modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:50;display:none;align-items:center;justify-content:center;padding:1rem;}
+  .modal-bg.open{display:flex;}
+  .modal{background:#fff;border-radius:.75rem;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;}
+  .hidden{display:none !important;}
+  .toast{position:fixed;top:1rem;right:1rem;z-index:100;background:#fff;border:1px solid var(--border);border-left:4px solid var(--success);padding:.75rem 1rem;border-radius:.5rem;box-shadow:0 10px 25px rgba(0,0,0,.1);animation:slide .25s ease-out;font-size:.875rem;max-width:360px;}
+  .toast.error{border-left-color:var(--danger);}
+  @keyframes slide { from { transform: translateX(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .stat-icon{width:2.75rem;height:2.75rem;border-radius:.6rem;display:flex;align-items:center;justify-content:center;}
+  .tab-btn{padding:.55rem 1rem;font-size:.875rem;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;}
+  .tab-btn.active{color:var(--primary);border-color:var(--primary);}
+  .toggle{position:relative;display:inline-block;width:2.5rem;height:1.4rem;}
+  .toggle input{opacity:0;width:0;height:0;}
+  .toggle-slider{position:absolute;inset:0;background:#cbd5e1;border-radius:1rem;cursor:pointer;transition:.2s;}
+  .toggle-slider:before{content:"";position:absolute;height:1rem;width:1rem;left:.2rem;top:.2rem;background:#fff;border-radius:50%;transition:.2s;}
+  .toggle input:checked+.toggle-slider{background:var(--primary);}
+  .toggle input:checked+.toggle-slider:before{transform:translateX(1.1rem);}
+  #syncBadge{position:fixed;top:.75rem;right:1rem;z-index:40;padding:.35rem .7rem;border-radius:9999px;font-size:.75rem;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer;user-select:none;}
+  .spinner{display:inline-block;width:.85rem;height:.85rem;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:-2px;margin-right:.35rem;}
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div id="syncBadge" class="hidden" onclick="showSyncMenu()" title="Senkron durumu">Bekleniyor</div>
+
+<!-- WIZARD -->
+<div id="wizardView" class="hidden min-h-screen grid-pattern flex items-center justify-center p-4">
+  <div class="w-full max-w-lg">
+    <div class="flex items-center gap-3 mb-6 justify-center">
+      <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xl">V</div>
+      <div><h1 class="text-2xl font-bold">Vincard</h1><p class="text-xs text-slate-500 -mt-0.5">GitHub Sync — İlk Kurulum</p></div>
+    </div>
+    <div class="card p-8 shadow-xl">
+      <h2 class="text-xl font-semibold mb-1">GitHub Bağlantısı</h2>
+      <p class="text-sm text-slate-500 mb-6">Verileriniz reponuzdaki <span class="mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">data/store.json</span> dosyasında saklanır.</p>
+      <form onsubmit="connectGithub(event)" class="space-y-4">
+        <div><label class="text-sm font-medium">Repo Sahibi (owner) *</label><input required class="input mt-1 mono" id="wOwner" placeholder="kullaniciadi" autocomplete="off" /></div>
+        <div><label class="text-sm font-medium">Repo Adı *</label><input required class="input mt-1 mono" id="wRepo" placeholder="vincard-stok" autocomplete="off" /></div>
+        <div><label class="text-sm font-medium">Branch</label><input class="input mt-1 mono" id="wBranch" value="main" autocomplete="off" /></div>
+        <div>
+          <label class="text-sm font-medium">Personal Access Token (PAT) *</label>
+          <input type="password" required class="input mt-1 mono" id="wToken" placeholder="ghp_..." autocomplete="off" />
+          <p class="text-xs text-slate-500 mt-1">
+            <a href="https://github.com/settings/tokens/new?scopes=repo&description=Vincard%20Stok" target="_blank" class="text-blue-600 hover:underline">GitHub'da yeni token oluştur</a> — <span class="mono">repo</span> scope yeterli. Token bu tarayıcının <b>sessionStorage</b>'ına yazılır (tarayıcı kapanınca silinir).
+          </p>
+        </div>
+        <button type="submit" class="btn btn-primary w-full justify-center h-11" id="wSubmit">Bağlan ve Doğrula</button>
+      </form>
+      <p class="text-xs text-slate-400 mt-4 text-center"><a class="underline" href="#" onclick="showHelp();return false;">Kurulum kılavuzu</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginView" class="hidden min-h-screen grid-pattern flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="flex items-center gap-3 mb-8 justify-center">
+      <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xl">V</div>
+      <div><h1 class="text-2xl font-bold">Vincard</h1><p class="text-xs text-slate-500 -mt-0.5">Stok Takip — GitHub Sync</p></div>
+    </div>
+    <div class="card p-8 shadow-xl">
+      <h2 class="text-xl font-semibold">Giriş Yap</h2>
+      <p class="text-sm text-slate-500 mb-6">Devam etmek için bilgilerinizi girin</p>
+      <form onsubmit="login(event)" class="space-y-4">
+        <div><label class="text-sm font-medium">Kullanıcı Adı</label><input class="input mt-1" id="loginUser" value="admin" required /></div>
+        <div><label class="text-sm font-medium">Şifre</label><input type="password" class="input mt-1" id="loginPass" value="admin123" required /></div>
+        <button type="submit" class="btn btn-primary w-full justify-center h-11" id="loginBtn">Giriş Yap</button>
+      </form>
+      <p class="text-xs text-slate-500 mt-6 text-center">Varsayılan: <span class="mono">admin / admin123</span></p>
+    </div>
+    <div class="text-xs text-center text-slate-400 mt-4 space-x-3">
+      <span id="repoInfoLogin"></span>
+      <a href="#" onclick="resetGithubConfig();return false;" class="underline">Bağlantıyı sıfırla</a>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appView" class="hidden min-h-screen flex">
+  <aside class="w-64 shrink-0 bg-white border-r border-slate-200 flex flex-col">
+    <div class="h-16 px-5 flex items-center gap-2 border-b border-slate-200">
+      <div class="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center">V</div>
+      <div><div class="font-semibold">Vincard</div><div class="text-xs text-slate-500">Stok Takip</div></div>
+    </div>
+    <nav class="flex-1 p-3 space-y-1" id="navMenu"></nav>
+    <div class="p-3 border-t border-slate-200 space-y-2">
+      <div class="flex items-center gap-3 px-2 py-2">
+        <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-semibold flex items-center justify-center text-xs" id="userAvatar">Y</div>
+        <div class="min-w-0"><div class="text-sm font-medium truncate" id="userName"></div><div class="text-xs text-slate-500" id="userRole"></div></div>
+      </div>
+      <button class="btn btn-outline w-full justify-center" onclick="logout()">Çıkış Yap</button>
+    </div>
+  </aside>
+  <main class="flex-1 overflow-x-hidden"><div class="max-w-[1400px] mx-auto px-6 py-8" id="pageBody"></div></main>
+</div>
+
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()"><div class="modal p-6" id="modalBody"></div></div>
+
+<script>
+/* =====================================================================
+   VINCARD STOK TAKİP — GitHub Sync (tek dosya)
+   ===================================================================== */
+
+const GH_CONFIG_KEY = "vincard_gh_config";
+const GH_TOKEN_KEY = "vincard_gh_token";
+const LEGACY_LS_KEY = "vincard_stok_v1";
+const STORE_PATH = "data/store.json";
+const REFRESH_INTERVAL_MS = 30000;
+const RATE_LIMIT_WARN_THRESHOLD = 500;
+
+let ghConfig = null;
+let ghToken = null;
+let currentSHA = null;
+let saveQueue = Promise.resolve();
+let syncStatus = "idle";
+let rateLimitRemaining = null;
+let lastRateWarn = null;
+let refreshTimer = null;
+
+const DEFAULT_WIDGETS = {total_products:true,total_stock_value:true,low_stock_count:true,today_movements_count:true,low_stock_list:true,recent_additions:true,valuable_products:true,category_distribution:true};
+const DEFAULT_MENUS = {dashboard:true,products:true,movements:true,reports:true};
+const DEFAULT_COLS = {
+  products:{code:true,name:true,category:true,quantity:true,critical:true,unit_price:true,total_value:true},
+  movements:{date:true,user:true,product:true,type:true,quantity:true,location:true,reason:true},
+  reports:{date:true,user:true,product:true,type:true,quantity:true,location:true,reason:true}
+};
+function mergeDefaults(s){
+  s=s||{};
+  s.widgets={...DEFAULT_WIDGETS,...(s.widgets||{})};
+  s.menus={...DEFAULT_MENUS,...(s.menus||{})};
+  s.cols=s.cols||{};
+  s.cols.products={...DEFAULT_COLS.products,...(s.cols.products||{})};
+  s.cols.movements={...DEFAULT_COLS.movements,...(s.cols.movements||{})};
+  s.cols.reports={...DEFAULT_COLS.reports,...(s.cols.reports||{})};
+  return s;
+}
+function uid(){return "id-"+Math.random().toString(36).slice(2,10)+Date.now().toString(36);}
+function nowISO(){return new Date().toISOString();}
+
+let state = null;
+let session = null;
+
+function seed(){
+  const adminId = uid();
+  return {
+    users:[{id:adminId,username:"admin",password:hashPw("admin123"),name:"Yönetici",role:"admin",is_active:true,created_at:nowISO()}],
+    categories:[{id:uid(),name:"Genel",color:"#2563EB"}],
+    locations:[{id:uid(),name:"Ana Depo",kind:"depo",auto_created:false}],
+    products:[],
+    movements:[],
+    settings:mergeDefaults({app_title:"Vincard Stok Takip",primary_color:"#2563EB"})
+  };
+}
+
+function hashPw(pw){ try { return dcodeIO.bcrypt.hashSync(String(pw), 10); } catch(e){ return String(pw); } }
+function verifyPw(pw, hash){
+  if(!hash) return false;
+  if(String(hash).startsWith("$2")) { try { return dcodeIO.bcrypt.compareSync(String(pw), hash); } catch(e){ return false; } }
+  return String(pw) === String(hash);
+}
+
+const fmtTRY = n => new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:2}).format(Number(n||0));
+const fmtNum = n => new Intl.NumberFormat("tr-TR",{maximumFractionDigits:2}).format(Number(n||0));
+function fmtDate(iso){ try { return new Date(iso).toLocaleString("tr-TR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}); } catch(e){ return iso; } }
+function toast(msg,type){const t=document.createElement("div");t.className="toast"+(type==="error"?" error":"");t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3200);}
+function normTr(s){return String(s||"").toLocaleLowerCase("tr-TR").replace(/[çğıöşü]/g,c=>({ç:"c",ğ:"g",ı:"i",ö:"o",ş:"s",ü:"u"}[c]||c)).replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();}
+function matchProduct(p,q){if(!q)return true;const nq=normTr(q);if(!nq)return true;const hay=normTr((p.code||"")+" "+(p.name||"")+" "+(p.description||"")+" "+(p.location||""));return nq.split(" ").every(t=>hay.includes(t));}
+function openModal(html){document.getElementById("modalBody").innerHTML=html;document.getElementById("modalBg").classList.add("open");}
+function closeModal(){document.getElementById("modalBg").classList.remove("open");}
+function currentUser(){return session ? state.users.find(u=>u.id===session.user_id) : null;}
+
+/* ============ GITHUB API ============ */
+function loadGhConfig(){
+  try { ghConfig = JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || "null"); } catch(e){ ghConfig = null; }
+  ghToken = sessionStorage.getItem(GH_TOKEN_KEY);
+}
+function saveGhConfig(cfg){ ghConfig = cfg; localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(cfg)); }
+function saveGhToken(t){ ghToken = t; sessionStorage.setItem(GH_TOKEN_KEY, t); }
+function resetGithubConfig(){
+  if(!confirm("GitHub bağlantısı sıfırlansın mı? (Verilere dokunulmaz, sadece bu tarayıcıdaki repo/token bilgisi silinir.)")) return;
+  localStorage.removeItem(GH_CONFIG_KEY); sessionStorage.removeItem(GH_TOKEN_KEY);
+  ghConfig = null; ghToken = null; session = null; sessionStorage.removeItem("vincard_session");
+  location.reload();
+}
+
+async function ghFetch(url, opts){
+  opts = opts || {};
+  opts.headers = Object.assign({}, opts.headers||{}, {
+    "Authorization": "Bearer " + ghToken,
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28"
+  });
+  const res = await fetch(url, opts);
+  const rem = res.headers.get("x-ratelimit-remaining");
+  if(rem !== null){
+    rateLimitRemaining = parseInt(rem, 10);
+    if(rateLimitRemaining < RATE_LIMIT_WARN_THRESHOLD){
+      const bucket = Math.floor(rateLimitRemaining / 50);
+      if(lastRateWarn !== bucket){
+        lastRateWarn = bucket;
+        toast("GitHub rate limit: " + rateLimitRemaining + " istek kaldı", "error");
+      }
+    } else { lastRateWarn = null; }
+    updateSyncBadge();
+  }
+  return res;
+}
+
+async function ghGetStore(){
+  const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${STORE_PATH}?ref=${encodeURIComponent(ghConfig.branch)}&_=${Date.now()}`;
+  const res = await ghFetch(url, { cache: "no-store" });
+  if(res.status === 404) return { notFound: true };
+  if(res.status === 401) throw new Error("Token geçersiz (401)");
+  if(res.status === 403) { const j = await res.json().catch(()=>({})); throw new Error("Erişim reddedildi (403): " + (j.message||"")); }
+  if(!res.ok){ const j = await res.json().catch(()=>({})); throw new Error(`GitHub API ${res.status}: ${j.message||""}`); }
+  const data = await res.json();
+  const b64 = (data.content||"").replace(/\n/g,"");
+  const content = decodeURIComponent(escape(atob(b64)));
+  return { content: JSON.parse(content), sha: data.sha };
+}
+
+async function ghPutStore(stateObj, sha){
+  const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${STORE_PATH}`;
+  const cleaned = JSON.parse(JSON.stringify(stateObj));
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(cleaned, null, 2))));
+  const u = currentUser();
+  const body = {
+    message: `chore(store): update by ${(u && (u.username||u.name)) || "app"} @ ${nowISO()}`,
+    content,
+    branch: ghConfig.branch
+  };
+  if(sha) body.sha = sha;
+  const res = await ghFetch(url, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if(res.status === 409 || res.status === 422){
+    const err = new Error("sha_mismatch"); err.conflict = true; throw err;
+  }
+  if(!res.ok){ const j = await res.json().catch(()=>({})); throw new Error(`GitHub PUT ${res.status}: ${j.message||""}`); }
+  const data = await res.json();
+  return data.content.sha;
+}
+
+function mergeStates(local, remote){
+  const mvMap = {};
+  (remote.movements || []).forEach(m => mvMap[m.id] = m);
+  (local.movements  || []).forEach(m => { if(!mvMap[m.id]) mvMap[m.id] = m; });
+  return {
+    users:      local.users      || remote.users      || [],
+    categories: local.categories || remote.categories || [],
+    locations:  local.locations  || remote.locations  || [],
+    products:   local.products   || remote.products   || [],
+    movements:  Object.values(mvMap).sort((a,b)=> (a.happened_at||"").localeCompare(b.happened_at||"")),
+    settings:   mergeDefaults(local.settings || remote.settings || {})
+  };
+}
+
+function normalizeState(s){
+  s = s || {};
+  s.users = s.users || [];
+  s.categories = s.categories || [];
+  s.locations = s.locations || [];
+  s.products = s.products || [];
+  s.movements = s.movements || [];
+  s.settings = mergeDefaults(s.settings || {});
+  return s;
+}
+
+async function pullState(silent){
+  if(!silent) setSyncStatus("loading");
+  try{
+    const r = await ghGetStore();
+    if(r.notFound) return { notFound: true };
+    currentSHA = r.sha;
+    state = normalizeState(r.content);
+    setSyncStatus("idle");
+    return { ok: true };
+  } catch(e){
+    setSyncStatus("offline");
+    if(!silent) toast("Yükleme hatası: " + e.message, "error");
+    return { error: e };
+  }
+}
+
+async function pushState(){
+  setSyncStatus("saving");
+  let attempts = 0;
+  while(attempts < 3){
+    try{
+      const newSha = await ghPutStore(state, currentSHA);
+      currentSHA = newSha;
+      setSyncStatus("idle");
+      return;
+    } catch(e){
+      if(e.conflict){
+        attempts++;
+        try {
+          const remote = await ghGetStore();
+          if(remote.notFound){ currentSHA = null; continue; }
+          state = normalizeState(mergeStates(state, remote.content));
+          currentSHA = remote.sha;
+          if(!document.getElementById("modalBg").classList.contains("open")) renderApp();
+          continue;
+        } catch(inner){
+          setSyncStatus("error"); throw inner;
+        }
+      }
+      setSyncStatus("error");
+      throw e;
+    }
+  }
+  setSyncStatus("error");
+  throw new Error("Çakışma çözülemedi (3 deneme başarısız). Sayfayı yenileyip tekrar deneyin.");
+}
+
+function save(){
+  saveQueue = saveQueue.then(() => pushState().catch(err => {
+    console.error("Push error:", err);
+    toast("Kayıt hatası: " + err.message, "error");
+  }));
+  return saveQueue;
+}
+
+function setSyncStatus(s){ syncStatus = s; updateSyncBadge(); }
+function updateSyncBadge(){
+  const el = document.getElementById("syncBadge");
+  if(!el) return;
+  if(!ghConfig || !ghToken){ el.classList.add("hidden"); return; }
+  el.classList.remove("hidden");
+  const map = {
+    idle:    { text: "✓ Senkron",       cls: "bg-emerald-100 text-emerald-700 border border-emerald-200" },
+    loading: { text: '<span class="spinner"></span>Yükleniyor', cls: "bg-blue-100 text-blue-700 border border-blue-200" },
+    saving:  { text: '<span class="spinner"></span>Yazılıyor',  cls: "bg-amber-100 text-amber-800 border border-amber-200" },
+    offline: { text: "⚠ Bağlantı yok",  cls: "bg-slate-100 text-slate-700 border border-slate-200" },
+    error:   { text: "✗ Hata",           cls: "bg-rose-100 text-rose-700 border border-rose-200" }
+  };
+  const st = map[syncStatus] || map.idle;
+  el.className = st.cls;
+  const rate = (rateLimitRemaining !== null) ? (" · " + rateLimitRemaining + "/h") : "";
+  el.innerHTML = st.text + rate;
+}
+function showSyncMenu(){
+  const tokenBadge = ghToken ? '<span class="badge bg-emerald-100 text-emerald-700">sessionStorage</span>' : '<span class="badge bg-rose-100 text-rose-700">Yok</span>';
+  const info = `
+    <div class="text-xs text-slate-500 space-y-1">
+      <div><b>Repo:</b> <span class="mono">${ghConfig.owner}/${ghConfig.repo}</span> @ <span class="mono">${ghConfig.branch}</span></div>
+      <div><b>Durum:</b> ${syncStatus}</div>
+      <div><b>Token:</b> ${tokenBadge}</div>
+      <div><b>Rate limit:</b> ${rateLimitRemaining===null?"—":rateLimitRemaining+" / 5000"}</div>
+      <div><b>SHA:</b> <span class="mono">${currentSHA?currentSHA.slice(0,10):"—"}</span></div>
+    </div>`;
+  openModal(`<h3 class="text-lg font-semibold mb-3">Senkron Durumu</h3>${info}
+    <div class="flex flex-wrap gap-2 mt-5">
+      <button class="btn btn-outline btn-sm" onclick="pullState().then(()=>{closeModal();if(session)renderApp();toast('Yenilendi');})">Şimdi Yenile</button>
+      <button class="btn btn-outline btn-sm" onclick="downloadBackup()">Yerel Yedek İndir</button>
+      <button class="btn btn-danger btn-sm" onclick="closeModal();resetGithubConfig()">Bağlantıyı Sıfırla</button>
+      <button class="btn btn-primary btn-sm ml-auto" onclick="closeModal()">Kapat</button>
+    </div>`);
+}
+
+/* ============ WIZARD ============ */
+function showWizard(){
+  document.getElementById("wizardView").classList.remove("hidden");
+  document.getElementById("loginView").classList.add("hidden");
+  document.getElementById("appView").classList.add("hidden");
+  const cfg = ghConfig || {};
+  if(cfg.owner) document.getElementById("wOwner").value = cfg.owner;
+  if(cfg.repo) document.getElementById("wRepo").value = cfg.repo;
+  if(cfg.branch) document.getElementById("wBranch").value = cfg.branch;
+}
+async function connectGithub(e){
+  e.preventDefault();
+  const owner = document.getElementById("wOwner").value.trim();
+  const repo = document.getElementById("wRepo").value.trim();
+  const branch = (document.getElementById("wBranch").value.trim() || "main");
+  const token = document.getElementById("wToken").value.trim();
+  const btn = document.getElementById("wSubmit");
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Doğrulanıyor...';
+  try {
+    saveGhConfig({ owner, repo, branch });
+    saveGhToken(token);
+    const repoRes = await ghFetch(`https://api.github.com/repos/${owner}/${repo}`);
+    if(repoRes.status === 404) throw new Error("Repo bulunamadı veya token erişemiyor.");
+    if(repoRes.status === 401) throw new Error("Token geçersiz.");
+    if(!repoRes.ok) throw new Error("Repo erişim hatası (" + repoRes.status + ")");
+    const pull = await pullState(true);
+    if(pull.notFound){
+      const legacy = localStorage.getItem(LEGACY_LS_KEY);
+      let doMigrate = false;
+      if(legacy){
+        doMigrate = confirm("Bu tarayıcıda eski yerel veri bulundu. GitHub'a yükleyeyim mi? (Aksi halde sıfır veriyle başlanır.)");
+      }
+      state = doMigrate ? migrateLegacy(legacy) : seed();
+      currentSHA = null;
+      await pushState();
+      toast(doMigrate ? "Yerel veri GitHub'a yüklendi" : "Yeni depo başlatıldı");
+    } else if(pull.error){
+      throw pull.error;
+    } else {
+      toast("Depo yüklendi");
+    }
+    document.getElementById("wizardView").classList.add("hidden");
+    showLogin();
+  } catch(err){
+    console.error(err);
+    toast(err.message, "error");
+    sessionStorage.removeItem(GH_TOKEN_KEY); ghToken = null;
+  } finally {
+    btn.disabled = false; btn.textContent = "Bağlan ve Doğrula";
+  }
+}
+function migrateLegacy(raw){
+  try{
+    const s = normalizeState(JSON.parse(raw));
+    delete s.session;
+    (s.users||[]).forEach(u => { if(u.password && !String(u.password).startsWith("$2")) u.password = hashPw(u.password); });
+    return s;
+  } catch(e){ toast("Eski veri okunamadı, sıfır veriyle başlanıyor", "error"); return seed(); }
+}
+function showHelp(){
+  openModal(`<h3 class="text-lg font-semibold mb-3">Kurulum Kılavuzu</h3>
+    <ol class="text-sm space-y-2 list-decimal pl-5 text-slate-700">
+      <li>GitHub'da bir <b>private repo</b> aç. Örn: <span class="mono">vincard-stok</span></li>
+      <li><b>Settings → Pages</b>: Source = <span class="mono">main</span>, klasör = root. Bu HTML dosyasını repoya <span class="mono">index.html</span> olarak koy.</li>
+      <li>Ekip üyelerini <b>Settings → Collaborators</b>'a ekle (yazma izni için zorunlu).</li>
+      <li>Her üye <a class="text-blue-600 underline" target="_blank" href="https://github.com/settings/tokens/new?scopes=repo&description=Vincard%20Stok">kendi PAT'ını üretir</a> — sadece <span class="mono">repo</span> scope yeterli.</li>
+      <li>URL'yi ekiple paylaş: <span class="mono">https://kullaniciadi.github.io/repo-adi/</span></li>
+    </ol>
+    <div class="text-right mt-4"><button class="btn btn-primary btn-sm" onclick="closeModal()">Anladım</button></div>`);
+}
+
+/* ============ AUTH ============ */
+function showLogin(){
+  document.getElementById("wizardView").classList.add("hidden");
+  document.getElementById("loginView").classList.remove("hidden");
+  document.getElementById("appView").classList.add("hidden");
+  const el = document.getElementById("repoInfoLogin");
+  if(el && ghConfig) el.innerHTML = 'Repo: <span class="mono">' + ghConfig.owner + "/" + ghConfig.repo + '</span> · ';
+}
+async function login(e){
+  e.preventDefault();
+  const btn = document.getElementById("loginBtn");
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Giriş yapılıyor...';
+  try{
+    await pullState(true);
+    const u = document.getElementById("loginUser").value.trim();
+    const p = document.getElementById("loginPass").value;
+    const user = state.users.find(x => x.username === u && x.is_active !== false);
+    if(!user || !verifyPw(p, user.password)){
+      toast("Kullanıcı adı veya şifre hatalı", "error"); return;
+    }
+    if(!String(user.password).startsWith("$2")){
+      user.password = hashPw(p);
+      save();
+    }
+    session = { user_id: user.id };
+    sessionStorage.setItem("vincard_session", JSON.stringify(session));
+    boot();
+    toast("Hoş geldiniz!");
+  } catch(err){
+    console.error(err); toast("Giriş hatası: " + err.message, "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "Giriş Yap";
+  }
+}
+function logout(){
+  session = null; sessionStorage.removeItem("vincard_session");
+  stopRefresh();
+  document.getElementById("appView").classList.add("hidden");
+  showLogin();
+}
+
+/* ============ ROUTER ============ */
+const ROUTES=[
+  {key:"dashboard",label:"Panel",icon:"■",render:renderDashboard},
+  {key:"products",label:"Ürünler",icon:"▤",render:renderProducts},
+  {key:"movements",label:"Stok Hareketleri",icon:"⇅",render:renderMovements},
+  {key:"reports",label:"Raporlar",icon:"◱",render:renderReports},
+  {key:"admin",label:"Yönetim",icon:"⚙",render:renderAdmin,adminOnly:true},
+];
+let currentRoute="dashboard";
+function go(key){currentRoute=key;renderApp();}
+function renderNav(){
+  const u=currentUser();const menus=state.settings.menus||DEFAULT_MENUS;
+  const html=ROUTES.filter(r=>{
+    if(r.adminOnly)return u.role==="admin";
+    return menus[r.key]!==false;
+  }).map(r=>`<div class="nav-link ${currentRoute===r.key?"active":""}" onclick="go('${r.key}')"><span>${r.icon}</span>${r.label}</div>`).join("");
+  document.getElementById("navMenu").innerHTML=html;
+}
+function renderApp(){
+  renderNav();
+  const menus=state.settings.menus||DEFAULT_MENUS;
+  const u=currentUser();
+  const route=ROUTES.find(r=>r.key===currentRoute);
+  if(!route||(route.adminOnly&&u.role!=="admin")||(!route.adminOnly&&menus[currentRoute]===false)){
+    currentRoute=u.role==="admin"?"admin":"dashboard";
+    ROUTES.find(r=>r.key===currentRoute).render();return;
+  }
+  route.render();
+}
+
+function startRefresh(){
+  stopRefresh();
+  refreshTimer = setInterval(async ()=>{
+    if(document.getElementById("modalBg").classList.contains("open")) return;
+    if(syncStatus === "saving") return;
+    const prevRoute = currentRoute;
+    const r = await pullState(true);
+    if(r && r.ok && session){
+      currentRoute = prevRoute;
+      renderApp();
+    }
+  }, REFRESH_INTERVAL_MS);
+}
+function stopRefresh(){ if(refreshTimer){ clearInterval(refreshTimer); refreshTimer=null; } }
+
+async function boot(){
+  loadGhConfig();
+  updateSyncBadge();
+  if(!ghConfig || !ghToken){ showWizard(); return; }
+  if(!state){
+    setSyncStatus("loading");
+    const r = await pullState(true);
+    if(r.notFound){
+      const legacy = localStorage.getItem(LEGACY_LS_KEY);
+      const migrate = legacy && confirm("GitHub'da veri yok. Eski yerel veriyi yükleyeyim mi?");
+      state = migrate ? migrateLegacy(legacy) : seed();
+      currentSHA = null;
+      try{ await pushState(); } catch(e){ toast("İlk yükleme başarısız: "+e.message,"error"); showWizard(); return; }
+    } else if(r.error){
+      showWizard(); return;
+    }
+  }
+  if(!session){
+    try{ session = JSON.parse(sessionStorage.getItem("vincard_session")||"null"); } catch(e){ session = null; }
+  }
+  if(!session){ showLogin(); return; }
+  const u = currentUser();
+  if(!u){ session = null; sessionStorage.removeItem("vincard_session"); showLogin(); return; }
+  document.getElementById("wizardView").classList.add("hidden");
+  document.getElementById("loginView").classList.add("hidden");
+  document.getElementById("appView").classList.remove("hidden");
+  document.getElementById("userAvatar").textContent=(u.name||u.username).slice(0,1).toUpperCase();
+  document.getElementById("userName").textContent=u.name||u.username;
+  document.getElementById("userRole").textContent=u.role==="admin"?"Yönetici":"Kullanıcı";
+  if(state.settings.primary_color) document.documentElement.style.setProperty("--primary", state.settings.primary_color);
+  renderApp();
+  startRefresh();
+}
+
+/* ============ DASHBOARD ============ */
+function renderDashboard(){
+  const w=state.settings.widgets||DEFAULT_WIDGETS;
+  const products=state.products;
+  const totalValue=products.reduce((s,p)=>s+(+p.quantity||0)*(+p.unit_price||0),0);
+  const low=products.filter(p=>+p.critical_level>0&&+p.quantity<=+p.critical_level);
+  const today=new Date();today.setHours(0,0,0,0);
+  const todayMoves=state.movements.filter(m=>new Date(m.happened_at)>=today).length;
+  const recent=[...products].sort((a,b)=>(b.created_at||"").localeCompare(a.created_at||"")).slice(0,5);
+  const valuable=[...products].sort((a,b)=>(b.quantity*b.unit_price)-(a.quantity*a.unit_price)).slice(0,5);
+  const catMap=Object.fromEntries(state.categories.map(c=>[c.id,c]));
+  const dist={};
+  products.forEach(p=>{const k=p.category_id||"uncat";if(!dist[k])dist[k]={name:(catMap[p.category_id]&&catMap[p.category_id].name)||"Kategorisiz",count:0};dist[k].count++;});
+  const distArr=Object.values(dist);
+  const stat=(label,val,bg,show,sub)=>show?`<div class="card p-5"><div class="flex items-start justify-between"><div><div class="text-xs uppercase tracking-wider text-slate-500 font-medium">${label}</div><div class="text-3xl font-bold mono mt-2">${val}</div>${sub?`<div class="text-xs text-slate-500 mt-1">${sub}</div>`:""}</div><div class="stat-icon" style="background:${bg}20;color:${bg}">●</div></div></div>`:"";
+  document.getElementById("pageBody").innerHTML=`
+    <h1 class="text-3xl font-bold tracking-tight">Stok Kontrol Paneli</h1>
+    <p class="text-sm text-slate-500 mt-1 mb-6">Anlık envanter özeti · <span class="mono text-xs">${ghConfig.owner}/${ghConfig.repo}</span></p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      ${stat("Toplam Ürün",fmtNum(products.length),"#2563EB",w.total_products)}
+      ${stat("Stok Değeri",fmtTRY(totalValue),"#059669",w.total_stock_value)}
+      ${stat("Düşük Stok",fmtNum(low.length),"#D97706",w.low_stock_count,"Kritik seviyede")}
+      ${stat("Bugünkü Hareketler",fmtNum(todayMoves),"#2563EB",w.today_movements_count)}
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+      ${w.low_stock_list?`<div class="card p-5"><h3 class="font-semibold mb-3">Düşük Stok Listesi <span class="badge bg-slate-100 text-slate-700 ml-2">${low.length}</span></h3>${low.length?low.slice(0,8).map(p=>`<div class="flex justify-between py-2 border-t border-slate-100"><div><div class="font-medium">${p.name}</div><div class="text-xs text-slate-500">${p.code}</div></div><div class="text-right mono font-semibold text-amber-700">${fmtNum(p.quantity)} ${p.unit}</div></div>`).join(""):`<p class="text-sm text-slate-500 py-4 text-center">Kritik seviyede ürün yok.</p>`}</div>`:""}
+      ${w.recent_additions?`<div class="card p-5"><h3 class="font-semibold mb-3">Son Eklenen Ürünler</h3>${recent.length?recent.map(p=>`<div class="flex justify-between py-2 border-t border-slate-100"><div><div class="font-medium">${p.name}</div><div class="text-xs text-slate-500">${p.code}</div></div><div class="mono text-sm">${fmtNum(p.quantity)} ${p.unit}</div></div>`).join(""):`<p class="text-sm text-slate-500 py-4 text-center">Henüz ürün yok.</p>`}</div>`:""}
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+      ${w.valuable_products?`<div class="card p-5"><h3 class="font-semibold mb-3">En Değerli Ürünler</h3>${valuable.length?valuable.map((p,i)=>`<div class="flex justify-between py-2 border-t border-slate-100"><div class="flex items-center gap-3"><div class="w-7 h-7 rounded-md bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center">${i+1}</div><div><div class="font-medium">${p.name}</div><div class="text-xs text-slate-500">${fmtNum(p.quantity)} × ${fmtTRY(p.unit_price)}</div></div></div><div class="mono font-semibold">${fmtTRY((p.quantity||0)*(p.unit_price||0))}</div></div>`).join(""):`<p class="text-sm text-slate-500 py-4 text-center">Veri yok.</p>`}</div>`:""}
+      ${w.category_distribution?`<div class="card p-5"><h3 class="font-semibold mb-3">Kategori Dağılımı</h3><div style="height:260px;position:relative;"><canvas id="pieChart"></canvas></div></div>`:""}
+    </div>`;
+  if(w.category_distribution && distArr.length){
+    const ctx=document.getElementById("pieChart").getContext("2d");
+    new Chart(ctx,{
+      type:"doughnut",
+      data:{labels:distArr.map(d=>d.name),datasets:[{data:distArr.map(d=>d.count),backgroundColor:["#2563EB","#10B981","#F59E0B","#8B5CF6","#EF4444","#0EA5E9","#EC4899","#14B8A6"]}]},
+      options:{plugins:{legend:{position:"bottom"}}}
+    });
+  }
+}
+
+/* ============ PRODUCTS ============ */
+let productFilter={q:"",cat:"all"};
+function renderProducts(){
+  const u=currentUser();
+  const c=state.settings.cols.products;
+  const filtered=state.products.filter(p=>{
+    if(productFilter.cat!=="all"&&p.category_id!==productFilter.cat)return false;
+    if(!matchProduct(p,productFilter.q))return false;
+    return true;
+  });
+  const catMap=Object.fromEntries(state.categories.map(c=>[c.id,c]));
+  document.getElementById("pageBody").innerHTML=`
+    <div class="flex justify-between items-end flex-wrap gap-4 mb-6">
+      <div><h1 class="text-3xl font-bold tracking-tight">Ürün Yönetimi</h1><p class="text-sm text-slate-500 mt-1">Toplam ${filtered.length} ürün</p></div>
+      <div class="flex gap-2 flex-wrap">
+        <button class="btn btn-outline" onclick="exportProductsExcel()">Excel'e Aktar</button>
+        <label class="btn btn-outline cursor-pointer">Excel'den Yükle<input type="file" accept=".xlsx,.xls,.csv" class="hidden" onchange="importProductsExcel(event)" /></label>
+        <button class="btn btn-ghost btn-sm" onclick="downloadProductTemplate()">Şablon</button>
+        <button class="btn btn-primary" onclick="productModal()">+ Yeni Ürün</button>
+      </div>
+    </div>
+    <div class="card p-4 mb-4 flex gap-3 flex-wrap">
+      <input class="input flex-1 min-w-[220px]" placeholder="Kod, ad, açıklama veya konum ara" value="${productFilter.q}" oninput="productFilter.q=this.value;renderProducts();setTimeout(()=>{const el=document.querySelector('[data-p-search]');if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length);}},0)" data-p-search />
+      <select class="input w-56" onchange="productFilter.cat=this.value;renderProducts()">
+        <option value="all">Tüm Kategoriler</option>
+        ${state.categories.map(c=>`<option value="${c.id}" ${productFilter.cat===c.id?"selected":""}>${c.name}</option>`).join("")}
+      </select>
+    </div>
+    <div class="card overflow-x-auto"><table>
+      <thead><tr>
+        ${c.code?"<th>Kod</th>":""}${c.name?"<th>Ürün Adı</th>":""}${c.category?"<th>Kategori</th>":""}
+        ${c.quantity?`<th class="text-right">Miktar</th>`:""}${c.critical?`<th class="text-right">Kritik</th>`:""}
+        ${c.unit_price?`<th class="text-right">Birim Fiyat</th>`:""}${c.total_value?`<th class="text-right">Toplam Değer</th>`:""}
+        <th class="text-right">İşlem</th>
+      </tr></thead>
+      <tbody>${filtered.length?filtered.map(p=>{const low=p.critical_level>0&&p.quantity<=p.critical_level;return `<tr>
+        ${c.code?`<td class="mono text-xs">${p.code}</td>`:""}
+        ${c.name?`<td class="font-medium">${p.name}</td>`:""}
+        ${c.category?`<td><span class="badge bg-slate-100 text-slate-700">${(catMap[p.category_id]&&catMap[p.category_id].name)||"—"}</span></td>`:""}
+        ${c.quantity?`<td class="text-right mono ${low?"text-amber-700 font-semibold":""}">${fmtNum(p.quantity)} <span class="text-xs text-slate-500">${p.unit}</span></td>`:""}
+        ${c.critical?`<td class="text-right mono text-slate-500">${fmtNum(p.critical_level)}</td>`:""}
+        ${c.unit_price?`<td class="text-right mono">${fmtTRY(p.unit_price)}</td>`:""}
+        ${c.total_value?`<td class="text-right mono font-semibold">${fmtTRY((p.quantity||0)*(p.unit_price||0))}</td>`:""}
+        <td class="text-right"><button class="btn btn-ghost btn-sm" onclick="productModal('${p.id}')">Düzenle</button>${u.role==="admin"?`<button class="btn btn-ghost btn-sm" onclick="deleteProduct('${p.id}')">Sil</button>`:""}</td>
+      </tr>`;}).join(""):`<tr><td colspan="8" class="text-center text-slate-500 py-10">Ürün bulunamadı</td></tr>`}</tbody>
+    </table></div>`;
+}
+function productModal(id){
+  const p=id?state.products.find(x=>x.id===id):{code:"",name:"",category_id:"",unit:"adet",quantity:0,critical_level:0,unit_price:0,location:"",description:""};
+  openModal(`<h3 class="text-lg font-semibold mb-4">${id?"Ürünü Düzenle":"Yeni Ürün"}</h3>
+    <form onsubmit="saveProduct(event,'${id||""}')" class="grid grid-cols-2 gap-4">
+      <div><label class="text-sm">Ürün Kodu *</label><input required class="input mt-1" name="code" value="${p.code}" /></div>
+      <div><label class="text-sm">Ürün Adı *</label><input required class="input mt-1" name="name" value="${p.name}" /></div>
+      <div><label class="text-sm">Kategori</label><select class="input mt-1" name="category_id"><option value="">— Yok —</option>${state.categories.map(c=>`<option value="${c.id}" ${p.category_id===c.id?"selected":""}>${c.name}</option>`).join("")}</select></div>
+      <div><label class="text-sm">Birim</label><input class="input mt-1" name="unit" value="${p.unit}" /></div>
+      <div><label class="text-sm">Miktar</label><input type="number" step="0.01" class="input mt-1" name="quantity" value="${p.quantity}" /></div>
+      <div><label class="text-sm">Kritik Seviye</label><input type="number" step="0.01" class="input mt-1" name="critical_level" value="${p.critical_level}" /></div>
+      <div><label class="text-sm">Birim Fiyat (TL)</label><input type="number" step="0.01" class="input mt-1" name="unit_price" value="${p.unit_price}" /></div>
+      <div><label class="text-sm">Konum</label><input class="input mt-1" name="location" value="${p.location||""}" /></div>
+      <div class="col-span-2"><label class="text-sm">Açıklama</label><input class="input mt-1" name="description" value="${p.description||""}" /></div>
+      <div class="col-span-2 flex justify-end gap-2 mt-2"><button type="button" class="btn btn-outline" onclick="closeModal()">İptal</button><button type="submit" class="btn btn-primary">${id?"Güncelle":"Ekle"}</button></div>
+    </form>`);
+}
+function saveProduct(e,id){
+  e.preventDefault();const fd=new FormData(e.target);const data={};fd.forEach((v,k)=>data[k]=v);
+  ["quantity","critical_level","unit_price"].forEach(k=>data[k]=+data[k]||0);
+  if(!id && state.products.some(p=>p.code===data.code)){toast("Bu ürün kodu zaten var","error");return;}
+  if(id){Object.assign(state.products.find(p=>p.id===id),data,{updated_at:nowISO()});}
+  else{state.products.push({id:uid(),...data,created_at:nowISO(),updated_at:nowISO()});}
+  save();closeModal();renderProducts();toast(id?"Ürün güncellendi":"Ürün eklendi");
+}
+function deleteProduct(id){if(!confirm("Ürünü silmek istediğinize emin misiniz?"))return;state.products=state.products.filter(p=>p.id!==id);save();renderProducts();toast("Silindi");}
+
+const PRODUCT_HEADERS=["Kod","Ürün Adı","Kategori","Birim","Miktar","Kritik Seviye","Birim Fiyat","Konum","Açıklama"];
+function exportProductsExcel(){
+  const catMap=Object.fromEntries(state.categories.map(c=>[c.id,c.name]));
+  const rows=[PRODUCT_HEADERS];
+  state.products.forEach(p=>rows.push([p.code,p.name,catMap[p.category_id]||"",p.unit||"adet",+p.quantity||0,+p.critical_level||0,+p.unit_price||0,p.location||"",p.description||""]));
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws["!cols"]=[{wch:14},{wch:30},{wch:18},{wch:10},{wch:12},{wch:14},{wch:14},{wch:18},{wch:30}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Urunler");
+  XLSX.writeFile(wb,`urunler-${new Date().toISOString().slice(0,10)}.xlsx`);
+  toast("Excel indirildi");
+}
+function downloadProductTemplate(){
+  const rows=[PRODUCT_HEADERS,["URN-001","Örnek Ürün","Genel","adet",100,10,50.00,"Ana Depo","Açıklama"]];
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws["!cols"]=[{wch:14},{wch:30},{wch:18},{wch:10},{wch:12},{wch:14},{wch:14},{wch:18},{wch:30}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Sablon");
+  XLSX.writeFile(wb,"urun-sablonu.xlsx");
+  toast("Şablon indirildi");
+}
+function importProductsExcel(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=new Uint8Array(ev.target.result);
+      const wb=XLSX.read(data,{type:"array"});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
+      if(rows.length<2){toast("Dosya boş","error");return;}
+      const header=rows[0].map(h=>String(h).trim().toLowerCase());
+      const idx={};
+      const map={code:["kod","code","sku","ürün kodu","urun kodu"],name:["ürün adı","urun adi","ad","name","ürün","urun"],category:["kategori","category"],unit:["birim","unit"],quantity:["miktar","quantity","stok","adet"],critical:["kritik seviye","kritik","critical","min","minimum"],price:["birim fiyat","fiyat","price","unit price"],location:["konum","lokasyon","location"],description:["açıklama","aciklama","description","not"]};
+      Object.entries(map).forEach(([k,alts])=>{idx[k]=header.findIndex(h=>alts.includes(h));});
+      if(idx.code<0||idx.name<0){toast("'Kod' ve 'Ürün Adı' kolonları zorunlu","error");return;}
+      let added=0,updated=0,newCats=0,skipped=0;
+      const catByName={};state.categories.forEach(c=>catByName[c.name.toLowerCase()]=c);
+      const findOrCreateCat=name=>{
+        if(!name)return null;
+        const key=String(name).trim().toLowerCase();if(!key)return null;
+        if(catByName[key])return catByName[key].id;
+        const c={id:uid(),name:String(name).trim(),color:"#2563EB"};state.categories.push(c);catByName[key]=c;newCats++;return c.id;
+      };
+      const toNum=v=>{if(v==null||v=="")return 0;const s=String(v).replace(/\./g,"").replace(",",".");const n=parseFloat(s);return isNaN(n)?0:n;};
+      for(let i=1;i<rows.length;i++){
+        const r=rows[i];const code=String(r[idx.code]||"").trim();const name=String(r[idx.name]||"").trim();
+        if(!code||!name){skipped++;continue;}
+        const doc={
+          code,name,
+          category_id:idx.category>=0?findOrCreateCat(r[idx.category]):null,
+          unit:idx.unit>=0&&r[idx.unit]?String(r[idx.unit]).trim():"adet",
+          quantity:idx.quantity>=0?toNum(r[idx.quantity]):0,
+          critical_level:idx.critical>=0?toNum(r[idx.critical]):0,
+          unit_price:idx.price>=0?toNum(r[idx.price]):0,
+          location:idx.location>=0?String(r[idx.location]||"").trim():"",
+          description:idx.description>=0?String(r[idx.description]||"").trim():""
+        };
+        const existing=state.products.find(p=>p.code===code);
+        if(existing){Object.assign(existing,doc,{updated_at:nowISO()});updated++;}
+        else{state.products.push({id:uid(),...doc,created_at:nowISO(),updated_at:nowISO()});added++;}
+      }
+      save();renderProducts();
+      toast(added+" yeni, "+updated+" güncellendi"+(newCats?", "+newCats+" yeni kategori":"")+(skipped?", "+skipped+" atlandı":""));
+    }catch(err){console.error(err);toast("Dosya okunamadı: "+err.message,"error");}
+    e.target.value="";
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* ============ MOVEMENTS ============ */
+let mvFilter={type:"all",product:"all",location:""};
+function renderMovements(){
+  const u=currentUser();
+  const c=state.settings.cols.movements;
+  const items=state.movements.filter(m=>{
+    if(mvFilter.type!=="all"&&m.type!==mvFilter.type)return false;
+    if(mvFilter.product!=="all"&&m.product_id!==mvFilter.product)return false;
+    if(mvFilter.location&&!(m.target_location||"").toLowerCase().includes(mvFilter.location.toLowerCase()))return false;
+    return true;
+  }).sort((a,b)=>b.happened_at.localeCompare(a.happened_at));
+  document.getElementById("pageBody").innerHTML=`
+    <div class="flex justify-between items-end flex-wrap gap-4 mb-6">
+      <div><h1 class="text-3xl font-bold tracking-tight">Stok Hareketleri</h1><p class="text-sm text-slate-500 mt-1">${items.length} kayıt</p></div>
+      <div class="flex gap-2"><button class="btn btn-success" onclick="movementModal('in')">Stok Girişi</button><button class="btn btn-danger" onclick="movementModal('out')">Stok Çıkışı</button></div>
+    </div>
+    <div class="card p-4 mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <select class="input" onchange="mvFilter.type=this.value;renderMovements()"><option value="all">Tüm Tipler</option><option value="in" ${mvFilter.type==="in"?"selected":""}>Giriş</option><option value="out" ${mvFilter.type==="out"?"selected":""}>Çıkış</option></select>
+      <select class="input" onchange="mvFilter.product=this.value;renderMovements()"><option value="all">Tüm Ürünler</option>${state.products.map(p=>`<option value="${p.id}" ${mvFilter.product===p.id?"selected":""}>${p.code} — ${p.name}</option>`).join("")}</select>
+      <input class="input" placeholder="Lokasyon ara..." value="${mvFilter.location}" oninput="mvFilter.location=this.value;renderMovements()" />
+    </div>
+    <div class="card overflow-x-auto"><table>
+      <thead><tr>
+        ${c.date?"<th>Tarih</th>":""}${c.user?"<th>Kullanıcı</th>":""}${c.product?"<th>Ürün</th>":""}
+        ${c.type?"<th>Tip</th>":""}${c.quantity?`<th class="text-right">Miktar</th>`:""}
+        ${c.location?"<th>Lokasyon</th>":""}${c.reason?"<th>Sebep</th>":""}<th></th>
+      </tr></thead>
+      <tbody>${items.length?items.map(m=>`<tr>
+        ${c.date?`<td class="text-xs text-slate-500">${fmtDate(m.happened_at)}</td>`:""}
+        ${c.user?`<td>${m.user_name}</td>`:""}
+        ${c.product?`<td><span class="mono text-xs mr-2">${m.product_code}</span>${m.product_name}</td>`:""}
+        ${c.type?`<td>${m.type==="in"?`<span class="badge bg-emerald-100 text-emerald-700">GİRİŞ</span>`:`<span class="badge bg-rose-100 text-rose-700">ÇIKIŞ</span>`}</td>`:""}
+        ${c.quantity?`<td class="text-right mono font-semibold">${m.type==="in"?"+":"−"}${fmtNum(m.quantity)}</td>`:""}
+        ${c.location?`<td>${m.target_location||"—"}</td>`:""}
+        ${c.reason?`<td class="text-sm text-slate-500">${m.reason||"—"}</td>`:""}
+        <td>${u.role==="admin"?`<button class="btn btn-ghost btn-sm" onclick="deleteMovement('${m.id}')">Sil</button>`:""}</td>
+      </tr>`).join(""):`<tr><td colspan="8" class="text-center text-slate-500 py-10">Hareket bulunamadı</td></tr>`}</tbody>
+    </table></div>`;
+}
+let mvPicker={q:"",productId:""};
+function movementModal(type){
+  mvPicker={q:"",productId:""};
+  openModal(`<h3 class="text-lg font-semibold mb-4">${type==="in"?"Stok Girişi":"Stok Çıkışı"}</h3>
+    <form onsubmit="saveMovement(event,'${type}')" class="space-y-3">
+      <div>
+        <label class="text-sm">Ürün Ara *</label>
+        <input class="input mt-1" id="mvSearch" placeholder="Kod veya ürün adı..." autocomplete="off" oninput="onMvSearch(this.value)" onfocus="renderMvList()" />
+        <input type="hidden" name="product_id" id="mvProductId" required />
+        <div id="mvSelected" class="mt-2 hidden"></div>
+        <div id="mvList" class="mt-1 border border-slate-200 rounded-md max-h-56 overflow-y-auto hidden bg-white"></div>
+      </div>
+      <div><label class="text-sm">Miktar *</label><input type="number" step="0.01" min="0.01" required class="input mt-1" name="quantity" /></div>
+      <div><label class="text-sm">Hedef Lokasyon</label><input class="input mt-1" name="target_location" list="locList" placeholder="Seçin veya yeni yazın..." /><datalist id="locList">${state.locations.map(l=>`<option value="${l.name}">`).join("")}</datalist></div>
+      <div><label class="text-sm">Sebep / Açıklama</label><textarea rows="2" class="input mt-1" name="reason"></textarea></div>
+      <div class="flex justify-end gap-2"><button type="button" class="btn btn-outline" onclick="closeModal()">İptal</button><button type="submit" class="btn btn-primary">Kaydet</button></div>
+    </form>`);
+  setTimeout(()=>{const el=document.getElementById("mvSearch");if(el)el.focus();renderMvList();},50);
+}
+function onMvSearch(v){mvPicker.q=v;mvPicker.productId="";document.getElementById("mvProductId").value="";document.getElementById("mvSelected").classList.add("hidden");renderMvList();}
+function renderMvList(){
+  const list=state.products.filter(p=>matchProduct(p,mvPicker.q)).slice(0,50);
+  const el=document.getElementById("mvList");if(!el)return;
+  if(list.length===0){el.innerHTML=`<div class="p-3 text-sm text-slate-500 text-center">Ürün bulunamadı</div>`;el.classList.remove("hidden");return;}
+  el.innerHTML=list.map(p=>`<div class="p-2.5 hover:bg-blue-50 cursor-pointer border-b border-slate-100 flex justify-between items-center text-sm" onclick="pickMvProduct('${p.id}')"><div><div class="font-medium">${p.name}</div><div class="text-xs text-slate-500 mono">${p.code}${p.location?" • "+p.location:""}</div></div><div class="text-right"><div class="mono text-xs">mevcut: <b>${fmtNum(p.quantity)}</b> ${p.unit}</div></div></div>`).join("");
+  el.classList.remove("hidden");
+}
+function pickMvProduct(id){
+  const p=state.products.find(x=>x.id===id);if(!p)return;
+  mvPicker.productId=id;
+  document.getElementById("mvProductId").value=id;
+  document.getElementById("mvSearch").value=p.code+" — "+p.name;
+  document.getElementById("mvList").classList.add("hidden");
+  const sel=document.getElementById("mvSelected");
+  sel.innerHTML=`<div class="p-2.5 bg-blue-50 rounded-md text-sm flex justify-between items-center"><div><span class="mono text-xs">${p.code}</span> • <b>${p.name}</b></div><div class="mono text-xs">mevcut: <b>${fmtNum(p.quantity)}</b> ${p.unit}</div></div>`;
+  sel.classList.remove("hidden");
+}
+function saveMovement(e,type){
+  e.preventDefault();const fd=new FormData(e.target);const d={type};fd.forEach((v,k)=>d[k]=v);d.quantity=+d.quantity;
+  const p=state.products.find(x=>x.id===d.product_id);if(!p){toast("Ürün seçin","error");return;}
+  const delta=type==="in"?d.quantity:-d.quantity;
+  if(p.quantity+delta<0){toast("Stok negatife düşemez","error");return;}
+  const loc=(d.target_location||"").trim();
+  if(loc && !state.locations.some(l=>l.name===loc)){state.locations.push({id:uid(),name:loc,kind:"diger",auto_created:true});}
+  const u=currentUser();
+  state.movements.push({id:uid(),product_id:p.id,product_code:p.code,product_name:p.name,type,quantity:d.quantity,target_location:loc||null,reason:d.reason||null,user_id:u.id,user_name:u.name||u.username,happened_at:nowISO(),created_at:nowISO()});
+  p.quantity+=delta;p.updated_at=nowISO();
+  save();closeModal();renderMovements();toast("Hareket kaydedildi");
+}
+function deleteMovement(id){
+  if(!confirm("Bu hareketi silmek istediğinize emin misiniz? Stok geri alınır."))return;
+  const m=state.movements.find(x=>x.id===id);const p=state.products.find(x=>x.id===m.product_id);
+  if(p){p.quantity+=m.type==="in"?-m.quantity:m.quantity;}
+  state.movements=state.movements.filter(x=>x.id!==id);save();renderMovements();toast("Silindi");
+}
+
+/* ============ REPORTS ============ */
+let reportRange={start:null,end:null},reportFilters={type:"all",product:"all",user:"all",location:""};
+function rangeThisWeek(){const now=new Date();const day=(now.getDay()+6)%7;const s=new Date(now);s.setDate(now.getDate()-day);s.setHours(0,0,0,0);const e=new Date(s);e.setDate(s.getDate()+6);e.setHours(23,59,59,999);return {start:s.toISOString(),end:e.toISOString()};}
+function rangeLastWeek(){const t=rangeThisWeek();const s=new Date(t.start);s.setDate(s.getDate()-7);const e=new Date(t.end);e.setDate(e.getDate()-7);return {start:s.toISOString(),end:e.toISOString()};}
+function rangeThisMonth(){const n=new Date();return {start:new Date(n.getFullYear(),n.getMonth(),1).toISOString(),end:new Date(n.getFullYear(),n.getMonth()+1,0,23,59,59).toISOString()};}
+function rangeLastMonth(){const n=new Date();return {start:new Date(n.getFullYear(),n.getMonth()-1,1).toISOString(),end:new Date(n.getFullYear(),n.getMonth(),0,23,59,59).toISOString()};}
+function rangeLast30(){const e=new Date();e.setHours(23,59,59);const s=new Date();s.setDate(s.getDate()-29);s.setHours(0,0,0);return {start:s.toISOString(),end:e.toISOString()};}
+function setQuick(key){const map={this_week:rangeThisWeek,last_week:rangeLastWeek,this_month:rangeThisMonth,last_month:rangeLastMonth,last_30_days:rangeLast30};reportRange=map[key]();renderReports();}
+function renderReports(){
+  const c=state.settings.cols.reports;
+  if(!reportRange.start)reportRange=rangeThisMonth();
+  const items=state.movements.filter(m=>{
+    if(reportRange.start&&m.happened_at<reportRange.start)return false;
+    if(reportRange.end&&m.happened_at>reportRange.end)return false;
+    if(reportFilters.type!=="all"&&m.type!==reportFilters.type)return false;
+    if(reportFilters.product!=="all"&&m.product_id!==reportFilters.product)return false;
+    if(reportFilters.user!=="all"&&m.user_id!==reportFilters.user)return false;
+    if(reportFilters.location&&!(m.target_location||"").toLowerCase().includes(reportFilters.location.toLowerCase()))return false;
+    return true;
+  }).sort((a,b)=>b.happened_at.localeCompare(a.happened_at));
+  const totalIn=items.filter(i=>i.type==="in").reduce((s,i)=>s+i.quantity,0);
+  const totalOut=items.filter(i=>i.type==="out").reduce((s,i)=>s+i.quantity,0);
+  const toInput=iso=>iso?iso.slice(0,10):"";
+  const quick=[["this_week","Bu Hafta"],["last_week","Geçen Hafta"],["this_month","Bu Ay"],["last_month","Geçen Ay"],["last_30_days","Son 30 Gün"]];
+  document.getElementById("pageBody").innerHTML=`
+    <div class="flex justify-between items-end flex-wrap gap-4 mb-6">
+      <div><h1 class="text-3xl font-bold tracking-tight">Raporlar</h1><p class="text-sm text-slate-500 mt-1">Filtreleyip Excel'e aktarın</p></div>
+      <button class="btn btn-success" onclick="exportExcel()">Excel İndir</button>
+    </div>
+    <div class="card p-5 mb-4">
+      <div class="flex flex-wrap gap-2 mb-4">${quick.map(([k,l])=>`<button class="btn btn-outline btn-sm" onclick="setQuick('${k}')">${l}</button>`).join("")}</div>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+        <div><label class="text-xs">Başlangıç</label><input type="date" class="input mt-1" value="${toInput(reportRange.start)}" onchange="reportRange.start=new Date(this.value+'T00:00').toISOString();renderReports()" /></div>
+        <div><label class="text-xs">Bitiş</label><input type="date" class="input mt-1" value="${toInput(reportRange.end)}" onchange="reportRange.end=new Date(this.value+'T23:59:59').toISOString();renderReports()" /></div>
+        <div><label class="text-xs">Tip</label><select class="input mt-1" onchange="reportFilters.type=this.value;renderReports()"><option value="all">Tümü</option><option value="in" ${reportFilters.type==="in"?"selected":""}>Giriş</option><option value="out" ${reportFilters.type==="out"?"selected":""}>Çıkış</option></select></div>
+        <div><label class="text-xs">Ürün</label><select class="input mt-1" onchange="reportFilters.product=this.value;renderReports()"><option value="all">Tümü</option>${state.products.map(p=>`<option value="${p.id}" ${reportFilters.product===p.id?"selected":""}>${p.code} — ${p.name}</option>`).join("")}</select></div>
+        <div><label class="text-xs">Lokasyon</label><input class="input mt-1" value="${reportFilters.location}" oninput="reportFilters.location=this.value;renderReports()" /></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+      <div class="card p-4"><div class="text-xs uppercase text-slate-500 tracking-wider">Toplam Giriş</div><div class="text-2xl font-bold mono text-emerald-700 mt-1">+${fmtNum(totalIn)}</div></div>
+      <div class="card p-4"><div class="text-xs uppercase text-slate-500 tracking-wider">Toplam Çıkış</div><div class="text-2xl font-bold mono text-rose-700 mt-1">−${fmtNum(totalOut)}</div></div>
+      <div class="card p-4"><div class="text-xs uppercase text-slate-500 tracking-wider">Net Hareket</div><div class="text-2xl font-bold mono mt-1">${fmtNum(totalIn-totalOut)}</div></div>
+    </div>
+    <div class="card overflow-x-auto"><table>
+      <thead><tr>
+        ${c.date?"<th>Tarih</th>":""}${c.user?"<th>Kullanıcı</th>":""}${c.product?"<th>Ürün</th>":""}
+        ${c.type?"<th>Tip</th>":""}${c.quantity?`<th class="text-right">Miktar</th>`:""}
+        ${c.location?"<th>Lokasyon</th>":""}${c.reason?"<th>Sebep</th>":""}
+      </tr></thead>
+      <tbody>${items.length?items.map(m=>`<tr>
+        ${c.date?`<td class="text-xs">${fmtDate(m.happened_at)}</td>`:""}
+        ${c.user?`<td>${m.user_name}</td>`:""}
+        ${c.product?`<td><span class="mono text-xs mr-2">${m.product_code}</span>${m.product_name}</td>`:""}
+        ${c.type?`<td>${m.type==="in"?`<span class="badge bg-emerald-100 text-emerald-700">GİRİŞ</span>`:`<span class="badge bg-rose-100 text-rose-700">ÇIKIŞ</span>`}</td>`:""}
+        ${c.quantity?`<td class="text-right mono font-semibold">${m.type==="in"?"+":"−"}${fmtNum(m.quantity)}</td>`:""}
+        ${c.location?`<td>${m.target_location||"—"}</td>`:""}
+        ${c.reason?`<td class="text-sm text-slate-500">${m.reason||"—"}</td>`:""}
+      </tr>`).join(""):`<tr><td colspan="7" class="text-center text-slate-500 py-10">Kayıt yok</td></tr>`}</tbody>
+    </table></div>`;
+}
+function exportExcel(){
+  const items=state.movements.filter(m=>{
+    if(reportRange.start&&m.happened_at<reportRange.start)return false;
+    if(reportRange.end&&m.happened_at>reportRange.end)return false;
+    if(reportFilters.type!=="all"&&m.type!==reportFilters.type)return false;
+    if(reportFilters.product!=="all"&&m.product_id!==reportFilters.product)return false;
+    if(reportFilters.location&&!(m.target_location||"").toLowerCase().includes(reportFilters.location.toLowerCase()))return false;
+    return true;
+  }).sort((a,b)=>b.happened_at.localeCompare(a.happened_at));
+  const rows=[["Tarih-Saat","Kullanıcı","Ürün Kodu","Ürün Adı","Tip","Miktar","Hedef Lokasyon","Sebep/Açıklama"]];
+  items.forEach(m=>rows.push([fmtDate(m.happened_at),m.user_name,m.product_code,m.product_name,m.type==="in"?"GİRİŞ":"ÇIKIŞ",m.quantity,m.target_location||"",m.reason||""]));
+  const ws=XLSX.utils.aoa_to_sheet(rows);ws["!cols"]=[{wch:20},{wch:16},{wch:14},{wch:30},{wch:10},{wch:10},{wch:22},{wch:30}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Stok Hareketleri");
+  XLSX.writeFile(wb,`stok-hareketleri-${Date.now()}.xlsx`);toast("Excel indirildi");
+}
+
+/* ============ ADMIN ============ */
+let adminTab="widgets";
+function renderAdmin(){
+  const tabs=[["widgets","Görünüm"],["users","Kullanıcılar"],["categories","Kategoriler"],["locations","Lokasyonlar"],["settings","Genel"],["backups","Yedekleme"]];
+  document.getElementById("pageBody").innerHTML=`
+    <h1 class="text-3xl font-bold tracking-tight">Yönetim Paneli</h1>
+    <p class="text-sm text-slate-500 mt-1 mb-6">Sistem ayarları · <span class="mono text-xs">${ghConfig.owner}/${ghConfig.repo}</span></p>
+    <div class="border-b border-slate-200 mb-6 flex flex-wrap">${tabs.map(([k,l])=>`<div class="tab-btn ${adminTab===k?"active":""}" onclick="adminTab='${k}';renderAdmin()">${l}</div>`).join("")}</div>
+    <div id="adminPanel"></div>`;
+  ({widgets:renderWidgets,users:renderUsers,categories:renderCategories,locations:renderLocations,settings:renderSettings,backups:renderBackups}[adminTab])();
+}
+function renderWidgets(){
+  const wLabels={total_products:"Toplam Ürün",total_stock_value:"Stok Değeri",low_stock_count:"Düşük Stok Uyarısı",today_movements_count:"Bugünkü Hareketler",low_stock_list:"Düşük Stok Listesi",recent_additions:"Son Eklenen Ürünler",valuable_products:"En Değerli Ürünler",category_distribution:"Kategori Dağılımı"};
+  const mLabels={dashboard:"Panel",products:"Ürünler",movements:"Stok Hareketleri",reports:"Raporlar"};
+  const cLabels={
+    products:{code:"Kod",name:"Ürün Adı",category:"Kategori",quantity:"Miktar",critical:"Kritik",unit_price:"Birim Fiyat",total_value:"Toplam Değer"},
+    movements:{date:"Tarih",user:"Kullanıcı",product:"Ürün",type:"Tip",quantity:"Miktar",location:"Lokasyon",reason:"Sebep"},
+    reports:{date:"Tarih",user:"Kullanıcı",product:"Ürün",type:"Tip",quantity:"Miktar",location:"Lokasyon",reason:"Sebep"}
+  };
+  const w=state.settings.widgets,m=state.settings.menus,cols=state.settings.cols;
+  const row=(label,checked,handler)=>`<div class="flex items-center justify-between p-3 border border-slate-200 rounded-md"><label>${label}</label><label class="toggle"><input type="checkbox" ${checked?"checked":""} onchange="${handler}"><span class="toggle-slider"></span></label></div>`;
+  const section=(title,desc,items)=>`<div class="card p-5"><h3 class="font-semibold mb-1">${title}</h3><p class="text-sm text-slate-500 mb-4">${desc}</p><div class="grid grid-cols-1 md:grid-cols-2 gap-2">${items}</div></div>`;
+  document.getElementById("adminPanel").innerHTML=`
+    <div class="space-y-4">
+      ${section("Menü Görünürlüğü","Sol menüde hangi sayfaların görüneceğini seçin.",
+        Object.entries(mLabels).map(([k,l])=>row(l,m[k]!==false,`toggleMenu('${k}',this.checked)`)).join(""))}
+      ${section("Dashboard Widget'ları","Panelde hangi kartların görüneceğini seçin.",
+        Object.entries(wLabels).map(([k,l])=>row(l,w[k]!==false,`toggleWidget('${k}',this.checked)`)).join(""))}
+      ${section("Ürünler Tablosu Kolonları","Ürünler sayfasında görünecek kolonlar.",
+        Object.entries(cLabels.products).map(([k,l])=>row(l,cols.products[k]!==false,`toggleCol('products','${k}',this.checked)`)).join(""))}
+      ${section("Hareketler Tablosu Kolonları","Stok Hareketleri sayfasında görünecek kolonlar.",
+        Object.entries(cLabels.movements).map(([k,l])=>row(l,cols.movements[k]!==false,`toggleCol('movements','${k}',this.checked)`)).join(""))}
+      ${section("Raporlar Tablosu Kolonları","Raporlar sayfasında görünecek kolonlar.",
+        Object.entries(cLabels.reports).map(([k,l])=>row(l,cols.reports[k]!==false,`toggleCol('reports','${k}',this.checked)`)).join(""))}
+    </div>`;
+}
+function toggleWidget(k,v){state.settings.widgets[k]=v;save();toast("Kaydedildi");}
+function toggleMenu(k,v){state.settings.menus[k]=v;save();renderNav();toast("Menü ayarı kaydedildi");}
+function toggleCol(page,k,v){state.settings.cols[page][k]=v;save();toast("Kolon ayarı kaydedildi");}
+function renderUsers(){
+  document.getElementById("adminPanel").innerHTML=`
+    <div class="flex justify-end mb-3"><button class="btn btn-primary" onclick="userModal()">+ Yeni Kullanıcı</button></div>
+    <div class="card overflow-x-auto"><table>
+      <thead><tr><th>Kullanıcı Adı</th><th>Ad Soyad</th><th>E-posta</th><th>Rol</th><th>Durum</th><th></th></tr></thead>
+      <tbody>${state.users.map(u=>`<tr>
+        <td class="mono">${u.username}</td><td>${u.name}</td><td class="text-slate-500">${u.email||"—"}</td>
+        <td>${u.role==="admin"?`<span class="badge bg-blue-100 text-blue-700">Yönetici</span>`:`<span class="badge bg-slate-100 text-slate-700">Kullanıcı</span>`}</td>
+        <td>${u.is_active!==false?`<span class="badge bg-emerald-100 text-emerald-700">Aktif</span>`:`<span class="badge bg-slate-100 text-slate-700">Pasif</span>`}</td>
+        <td class="text-right"><button class="btn btn-ghost btn-sm" onclick="userModal('${u.id}')">Düzenle</button>${u.id!==currentUser().id?`<button class="btn btn-ghost btn-sm" onclick="deleteUser('${u.id}')">Sil</button>`:""}</td>
+      </tr>`).join("")}</tbody></table></div>`;
+}
+function userModal(id){
+  const u=id?state.users.find(x=>x.id===id):{username:"",password:"",name:"",email:"",role:"user",is_active:true};
+  openModal(`<h3 class="text-lg font-semibold mb-4">${id?"Kullanıcıyı Düzenle":"Yeni Kullanıcı"}</h3>
+    <form onsubmit="saveUser(event,'${id||""}')" class="space-y-3">
+      <div><label class="text-sm">Kullanıcı Adı</label><input required class="input mt-1" name="username" value="${u.username}" ${id?"disabled":""} /></div>
+      <div><label class="text-sm">Ad Soyad</label><input required class="input mt-1" name="name" value="${u.name}" /></div>
+      <div><label class="text-sm">E-posta</label><input type="email" class="input mt-1" name="email" value="${u.email||""}" /></div>
+      <div><label class="text-sm">${id?"Yeni Şifre (boş bırakılabilir)":"Şifre"}</label><input type="password" class="input mt-1" name="password" ${id?"":"required"} /></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="text-sm">Rol</label><select class="input mt-1" name="role"><option value="user" ${u.role==="user"?"selected":""}>Kullanıcı</option><option value="admin" ${u.role==="admin"?"selected":""}>Yönetici</option></select></div>
+        <div><label class="text-sm">Durum</label><select class="input mt-1" name="is_active"><option value="true" ${u.is_active!==false?"selected":""}>Aktif</option><option value="false" ${u.is_active===false?"selected":""}>Pasif</option></select></div>
+      </div>
+      <div class="flex justify-end gap-2"><button type="button" class="btn btn-outline" onclick="closeModal()">İptal</button><button type="submit" class="btn btn-primary">Kaydet</button></div>
+    </form>`);
+}
+function saveUser(e,id){
+  e.preventDefault();const fd=new FormData(e.target);const d={};fd.forEach((v,k)=>d[k]=v);d.is_active=d.is_active==="true";
+  if(id){
+    const u=state.users.find(x=>x.id===id);
+    Object.assign(u,{name:d.name,email:d.email,role:d.role,is_active:d.is_active});
+    if(d.password) u.password = hashPw(d.password);
+  } else {
+    if(state.users.some(x=>x.username===d.username)){toast("Bu kullanıcı adı kullanımda","error");return;}
+    state.users.push({id:uid(),username:d.username,name:d.name,email:d.email,role:d.role,is_active:d.is_active,password:hashPw(d.password),created_at:nowISO()});
+  }
+  save();closeModal();renderAdmin();toast("Kaydedildi");
+}
+function deleteUser(id){if(!confirm("Kullanıcıyı silmek istediğinize emin misiniz?"))return;state.users=state.users.filter(u=>u.id!==id);save();renderAdmin();toast("Silindi");}
+function renderCategories(){
+  document.getElementById("adminPanel").innerHTML=`
+    <div class="card p-5"><h3 class="font-semibold mb-3">Kategoriler</h3>
+      <form onsubmit="addCategory(event)" class="flex gap-2 mb-4"><input required class="input flex-1" id="catName" placeholder="Yeni kategori adı" /><input type="color" id="catColor" class="input w-16 p-1 h-10" value="#2563EB" /><button class="btn btn-primary">Ekle</button></form>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">${state.categories.map(c=>`<div class="flex items-center justify-between p-3 border rounded-md"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full" style="background:${c.color}"></span>${c.name}</div><button class="btn btn-ghost btn-sm" onclick="deleteCategory('${c.id}')">Sil</button></div>`).join("")||`<p class="text-sm text-slate-500 col-span-full text-center py-6">Henüz kategori yok</p>`}</div>
+    </div>`;
+}
+function addCategory(e){e.preventDefault();const name=document.getElementById("catName").value;if(state.categories.some(c=>c.name===name)){toast("Zaten var","error");return;}state.categories.push({id:uid(),name,color:document.getElementById("catColor").value});save();renderAdmin();toast("Eklendi");}
+function deleteCategory(id){state.categories=state.categories.filter(c=>c.id!==id);save();renderAdmin();toast("Silindi");}
+function renderLocations(){
+  document.getElementById("adminPanel").innerHTML=`
+    <div class="card p-5"><h3 class="font-semibold mb-1">Lokasyonlar</h3><p class="text-sm text-slate-500 mb-4">Kullanıcıların yeni yazdığı lokasyonlar otomatik burada listelenir.</p>
+      <form onsubmit="addLocation(event)" class="flex gap-2 mb-4 flex-wrap">
+        <input required class="input flex-1 min-w-[200px]" id="locName" placeholder="Lokasyon adı" />
+        <select class="input w-40" id="locKind"><option value="depo">Depo</option><option value="sube">Şube</option><option value="musteri">Müşteri</option><option value="diger">Diğer</option></select>
+        <button class="btn btn-primary">Ekle</button>
+      </form>
+      <table><thead><tr><th>Ad</th><th>Tip</th><th>Kaynak</th><th></th></tr></thead><tbody>${state.locations.map(l=>`<tr><td>${l.name}</td><td><span class="badge bg-slate-100 text-slate-700">${l.kind}</span></td><td>${l.auto_created?`<span class="badge bg-amber-100 text-amber-700">Otomatik</span>`:`<span class="badge bg-blue-100 text-blue-700">Elle</span>`}</td><td class="text-right"><button class="btn btn-ghost btn-sm" onclick="deleteLocation('${l.id}')">Sil</button></td></tr>`).join("")||`<tr><td colspan="4" class="text-center text-slate-500 py-6">Lokasyon yok</td></tr>`}</tbody></table>
+    </div>`;
+}
+function addLocation(e){e.preventDefault();const name=document.getElementById("locName").value;if(state.locations.some(l=>l.name===name)){toast("Zaten var","error");return;}state.locations.push({id:uid(),name,kind:document.getElementById("locKind").value,auto_created:false});save();renderAdmin();toast("Eklendi");}
+function deleteLocation(id){state.locations=state.locations.filter(l=>l.id!==id);save();renderAdmin();toast("Silindi");}
+function renderSettings(){
+  const s=state.settings;
+  const tokenBadge = ghToken ? '<span class="badge bg-emerald-100 text-emerald-700">sessionStorage</span>' : '<span class="badge bg-rose-100 text-rose-700">Yok</span>';
+  document.getElementById("adminPanel").innerHTML=`
+    <div class="card p-5 max-w-lg"><h3 class="font-semibold mb-4">Genel Ayarlar</h3>
+      <div class="space-y-3">
+        <div><label class="text-sm">Uygulama Başlığı</label><input class="input mt-1" id="stTitle" value="${s.app_title||""}" /></div>
+        <div><label class="text-sm">Ana Renk</label><input type="color" class="input w-24 h-10 p-1 mt-1" id="stColor" value="${s.primary_color||"#2563EB"}" /></div>
+        <button class="btn btn-primary" onclick="saveSettings()">Kaydet</button>
+      </div>
+    </div>
+    <div class="card p-5 max-w-lg mt-4"><h3 class="font-semibold mb-2">GitHub Bağlantısı</h3>
+      <div class="text-sm text-slate-600 space-y-1">
+        <div><b>Repo:</b> <span class="mono">${ghConfig.owner}/${ghConfig.repo}</span></div>
+        <div><b>Branch:</b> <span class="mono">${ghConfig.branch}</span></div>
+        <div><b>Token:</b> ${tokenBadge}</div>
+        <div><b>Rate limit:</b> ${rateLimitRemaining===null?"—":rateLimitRemaining+" / 5000"}</div>
+      </div>
+      <div class="flex gap-2 mt-4"><button class="btn btn-outline btn-sm" onclick="showSyncMenu()">Detaylar</button><button class="btn btn-danger btn-sm" onclick="resetGithubConfig()">Bağlantıyı Sıfırla</button></div>
+    </div>`;
+}
+function saveSettings(){state.settings.app_title=document.getElementById("stTitle").value;state.settings.primary_color=document.getElementById("stColor").value;document.documentElement.style.setProperty("--primary",state.settings.primary_color);save();toast("Kaydedildi");}
+function renderBackups(){
+  document.getElementById("adminPanel").innerHTML=`
+    <div class="card p-5"><h3 class="font-semibold mb-1">Yedekleme (JSON)</h3>
+      <p class="text-sm text-slate-500 mb-4">Ana veri deposu GitHub'da <span class="mono">${ghConfig.owner}/${ghConfig.repo}:${STORE_PATH}</span>. Ekstra güvence için düzenli JSON yedeği indirin.</p>
+      <div class="flex gap-2 flex-wrap">
+        <button class="btn btn-primary" onclick="downloadBackup()">Yedek İndir (JSON)</button>
+        <label class="btn btn-outline cursor-pointer">Yedekten Geri Yükle<input type="file" accept=".json" class="hidden" onchange="restoreBackup(event)" /></label>
+        <button class="btn btn-danger" onclick="factoryReset()">TÜM Verileri Sıfırla</button>
+      </div>
+    </div>`;
+}
+function downloadBackup(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`vincard-yedek-${new Date().toISOString().slice(0,10)}.json`;a.click();toast("Yedek indirildi");}
+function restoreBackup(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(!d.users||!d.products) throw new Error("Geçersiz format");
+      if(confirm("Mevcut veriler değişecek ve GitHub'a yüklenecek. Devam?")){
+        state=normalizeState(d); save(); boot(); toast("Geri yüklendi");
+      }
+    } catch(err){ toast("Yedek dosyası geçersiz","error"); }
+  };
+  r.readAsText(f);
+}
+function factoryReset(){
+  if(!confirm("TÜM verileri sıfırlamak istediğinize emin misiniz?")) return;
+  state = seed(); save(); boot(); toast("Sıfırlandı");
+}
+
+/* ============ BOOT ============ */
+window.addEventListener("DOMContentLoaded", () => { boot(); });
+window.addEventListener("beforeunload", () => { stopRefresh(); });
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c8b18fdbb51a7',t:'MTc4ODM1MjQwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"7f7b0fd8732c4326aae4b9d58d5c514a"}' crossorigin="anonymous"></script>
+</body>
+</html>
