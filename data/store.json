@@ -5040,7 +5040,7 @@
         "quantity": true,
         "critical": true,
         "unit_price": false,
-        "total_value": true
+        "total_value": false
       },
       "movements": {
         "date": true,
