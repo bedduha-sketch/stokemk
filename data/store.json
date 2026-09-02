@@ -5039,7 +5039,7 @@
         "category": true,
         "quantity": true,
         "critical": true,
-        "unit_price": true,
+        "unit_price": false,
         "total_value": true
       },
       "movements": {
