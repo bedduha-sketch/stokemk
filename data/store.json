@@ -7000,13 +7000,13 @@
       "name": "A28 STD FRONT SATIN CHROME",
       "category_id": "id-8ho5xd6fmtk34t8p",
       "unit": "adet",
-      "quantity": 32,
+      "quantity": 33,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "LOCK FRONT ANSI 28MM STSTEEL",
       "created_at": "2026-09-03T08:29:16.240Z",
-      "updated_at": "2026-09-03T08:29:16.240Z"
+      "updated_at": "2026-09-03T08:33:14.765Z"
     },
     {
       "id": "id-zvzx5yr2mtl9keog",
@@ -7765,6 +7765,20 @@
       "user_name": "Ali ÖZEN",
       "happened_at": "2026-09-03T08:32:56.663Z",
       "created_at": "2026-09-03T08:32:56.663Z"
+    },
+    {
+      "id": "id-rvb9m631mtl9piq5",
+      "product_id": "id-iz2rtm6wmtl9keog",
+      "product_code": "480451422",
+      "product_name": "A28 STD FRONT SATIN CHROME",
+      "type": "in",
+      "quantity": 1,
+      "target_location": "Ana Depo",
+      "reason": null,
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "Ali ÖZEN",
+      "happened_at": "2026-09-03T08:33:14.765Z",
+      "created_at": "2026-09-03T08:33:14.765Z"
     }
   ],
   "settings": {
