@@ -1917,13 +1917,13 @@
       "name": "ENCODER 4010 W/CABLES",
       "category_id": "id-y66x0cekmtk34t8n",
       "unit": "adet",
-      "quantity": 8,
+      "quantity": 7,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "ENCODER 4010 W/CABLES",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-03T06:27:44.756Z"
+      "updated_at": "2026-09-03T06:30:27.112Z"
     },
     {
       "id": "id-leejv9k0mtk34t8n",
@@ -5090,6 +5090,20 @@
       "user_name": "ali özen",
       "happened_at": "2026-09-03T06:29:09.164Z",
       "created_at": "2026-09-03T06:29:09.164Z"
+    },
+    {
+      "id": "id-092eqpk1mtl5blt4",
+      "product_id": "id-94njp446mtk34t8n",
+      "product_code": "P001054328-001-001",
+      "product_name": "ENCODER 4010 W/CABLES",
+      "type": "out",
+      "quantity": 1,
+      "target_location": "Ana Depo",
+      "reason": "Accor Ofise Update için ayrıldı",
+      "user_id": "id-tejy3dmpmtk2yr8i",
+      "user_name": "CAN EKEYILMAZ",
+      "happened_at": "2026-09-03T06:30:27.112Z",
+      "created_at": "2026-09-03T06:30:27.112Z"
     }
   ],
   "settings": {
