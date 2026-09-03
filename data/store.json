@@ -453,6 +453,12 @@
       "name": "ibis west otel",
       "kind": "diger",
       "auto_created": true
+    },
+    {
+      "id": "id-0iql5ujamtlaprwz",
+      "name": "Maxx Royal Belek",
+      "kind": "diger",
+      "auto_created": true
     }
   ],
   "products": [
@@ -3962,13 +3968,13 @@
       "name": "SIGNATURE LCU KAPAK",
       "category_id": "id-0n4eyff9mtk34t8o",
       "unit": "adet",
-      "quantity": 78,
+      "quantity": 28,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "FRONT COVER SIGNATURE 3G RFID STANDARD BLACK",
       "created_at": "2026-09-03T08:29:16.180Z",
-      "updated_at": "2026-09-03T08:29:16.180Z"
+      "updated_at": "2026-09-03T09:01:26.291Z"
     },
     {
       "id": "id-ux8fepz6mtl9kems",
@@ -7821,6 +7827,20 @@
       "user_name": "CAN EKEYILMAZ",
       "happened_at": "2026-09-03T09:00:29.696Z",
       "created_at": "2026-09-03T09:00:29.696Z"
+    },
+    {
+      "id": "id-e51hknsgmtlaprwz",
+      "product_id": "id-vrte8du9mtl9kems",
+      "product_code": "4823798",
+      "product_name": "SIGNATURE LCU KAPAK",
+      "type": "out",
+      "quantity": 50,
+      "target_location": "Maxx Royal Belek",
+      "reason": "ürün siparişi",
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "Ali ÖZEN",
+      "happened_at": "2026-09-03T09:01:26.291Z",
+      "created_at": "2026-09-03T09:01:26.291Z"
     }
   ],
   "settings": {
