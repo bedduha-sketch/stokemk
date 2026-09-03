@@ -542,12 +542,12 @@
       "category_id": "id-fzyrvbu6mtk34t8m",
       "unit": "adet",
       "quantity": 1250,
-      "critical_level": 0,
+      "critical_level": 1000,
       "unit_price": 0,
       "location": "",
       "description": "VOSTIO RFID KEYCARD MIFARE UL EV1 128B WHITE",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-02T12:41:24.743Z"
+      "updated_at": "2026-09-03T07:22:25.612Z"
     },
     {
       "id": "id-dre5slinmtk34t8n",
