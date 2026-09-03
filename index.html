@@ -790,21 +790,27 @@ function importProductsExcel(e){
           description:idx.description>=0?String(r[idx.description]||"").trim():""
         };
 
-        // ✨ DEĞİŞİKLİK BURADA: Eşleşme Mantığı Güncellendi
         let existing = null;
         if(rawCode){
-          // Kod doluysa; sistemde HEM bu koda sahip olan HEM DE ismi birebir eşleşen ürünü arar.
-          // Kod aynı ama isim farklıysa eşleşme bulamaz (null kalır) ve yeni ürün olarak ekler.
           existing = state.products.find(p => p.code && p.code === rawCode && nameKey(p.name) === nKey);
         } else {
-          // Kod boşsa; sadece isme göre arar.
           existing = state.products.find(p => nameKey(p.name) === nKey);
         }
 
         if(existing){
+          // ✨ DEĞİŞİKLİK BURADA: Excel'den gelen yeni miktarı, sistemdeki eski miktarla toplayarak güncelliyoruz
+          const oldQuantity = toNum(existing.quantity);
+          const incomingQuantity = doc.quantity;
+          
           const patch = {...doc};
           if(rawCode){ patch.code = rawCode; }
+          
+          // Nesneleri birleştir
           Object.assign(existing, patch, {updated_at:nowISO()});
+          
+          // Stok miktarını ezmek yerine eski + yeni şeklinde topla
+          existing.quantity = oldQuantity + incomingQuantity;
+          
           updated++;
         } else {
           const finalCode = rawCode || ("VK-" + Math.floor(10000 + Math.random() * 90000));
@@ -815,7 +821,7 @@ function importProductsExcel(e){
       save();renderProducts();
       const parts = [
         added+" yeni",
-        updated+" güncellendi",
+        updated+" güncellendi (Stoklar Eklendi)",
         duplicateInFile+" dosya-içi tekrar atlandı",
         skippedNoName+" ad-eksik atlandı"
       ];
