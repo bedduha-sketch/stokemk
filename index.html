@@ -771,7 +771,6 @@ function importProductsExcel(e){
         const rawCode = idx.code >= 0 ? String(r[idx.code] || "").trim() : "";
         const nKey = nameKey(name);
 
-        // Aşama A — Excel içi tekrar taraması: ilk satır alınır, sonrakiler atlanır
         if(rawCode){
           if(seenCodes.has(rawCode)){ duplicateInFile++; continue; }
           seenCodes.add(rawCode);
@@ -791,24 +790,23 @@ function importProductsExcel(e){
           description:idx.description>=0?String(r[idx.description]||"").trim():""
         };
 
-        // Aşama B — Sistemdeki ürünle eşleşme (kesin öncelik)
+        // ✨ DEĞİŞİKLİK BURADA: Eşleşme Mantığı Güncellendi
         let existing = null;
         if(rawCode){
-          // 1) Kod dolu -> yalnızca koda göre ara
-          existing = state.products.find(p => p.code && p.code === rawCode);
+          // Kod doluysa; sistemde HEM bu koda sahip olan HEM DE ismi birebir eşleşen ürünü arar.
+          // Kod aynı ama isim farklıysa eşleşme bulamaz (null kalır) ve yeni ürün olarak ekler.
+          existing = state.products.find(p => p.code && p.code === rawCode && nameKey(p.name) === nKey);
         } else {
-          // 2) Kod boş -> isme göre (case-insensitive, trim) ara
+          // Kod boşsa; sadece isme göre arar.
           existing = state.products.find(p => nameKey(p.name) === nKey);
         }
 
         if(existing){
-          // Güncelleme: koda güven (isim değişebilir); kod boşsa mevcut kodu koru
           const patch = {...doc};
           if(rawCode){ patch.code = rawCode; }
           Object.assign(existing, patch, {updated_at:nowISO()});
           updated++;
         } else {
-          // Yeni ekle: kod boşsa geçici kod üret
           const finalCode = rawCode || ("VK-" + Math.floor(10000 + Math.random() * 90000));
           state.products.push({id:uid(),code:finalCode,...doc,created_at:nowISO(),updated_at:nowISO()});
           added++;
