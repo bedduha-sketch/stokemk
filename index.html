@@ -24,6 +24,7 @@
   .btn-danger{background:var(--danger);color:#fff;} .btn-danger:hover{filter:brightness(.94);}
   .btn-warn{background:var(--warning);color:#fff;} .btn-warn:hover{filter:brightness(.94);}
   .btn-sm{padding:.35rem .7rem;font-size:.8rem;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;pointer-events:none;}
   .card{background:var(--surface);border:1px solid var(--border);border-radius:.75rem;}
   .input,select.input,textarea.input{width:100%;padding:.55rem .75rem;border:1px solid var(--border);border-radius:.5rem;background:#fff;font-size:.9rem;outline:none;}
   .input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
@@ -57,7 +58,6 @@
 </head>
 <body>
 <div id="syncBadge" class="hidden" onclick="showSyncMenu()" title="Senkron durumu">Bekleniyor</div>
-
 <!-- WIZARD -->
 <div id="wizardView" class="hidden min-h-screen grid-pattern flex items-center justify-center p-4">
   <div class="w-full max-w-lg">
@@ -85,7 +85,6 @@
     </div>
   </div>
 </div>
-
 <!-- LOGIN -->
 <div id="loginView" class="hidden min-h-screen grid-pattern flex items-center justify-center p-4">
   <div class="w-full max-w-md">
@@ -108,7 +107,6 @@
     </div>
   </div>
 </div>
-
 <!-- APP -->
 <div id="appView" class="hidden min-h-screen flex">
   <aside class="w-64 shrink-0 bg-white border-r border-slate-200 flex flex-col">
@@ -127,21 +125,17 @@
   </aside>
   <main class="flex-1 overflow-x-hidden"><div class="max-w-[1400px] mx-auto px-6 py-8" id="pageBody"></div></main>
 </div>
-
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()"><div class="modal p-6" id="modalBody"></div></div>
-
 <script>
 /* =====================================================================
    VINCARD STOK TAKİP — GitHub Sync (tek dosya)
    ===================================================================== */
-
 const GH_CONFIG_KEY = "vincard_gh_config";
 const GH_TOKEN_KEY = "vincard_gh_token";
 const LEGACY_LS_KEY = "vincard_stok_v1";
 const STORE_PATH = "data/store.json";
 const REFRESH_INTERVAL_MS = 30000;
 const RATE_LIMIT_WARN_THRESHOLD = 500;
-
 let ghConfig = null;
 let ghToken = null;
 let currentSHA = null;
@@ -150,7 +144,6 @@ let syncStatus = "idle";
 let rateLimitRemaining = null;
 let lastRateWarn = null;
 let refreshTimer = null;
-
 const DEFAULT_WIDGETS = {total_products:true,total_stock_value:true,low_stock_count:true,today_movements_count:true,low_stock_list:true,recent_additions:true,valuable_products:true,category_distribution:true};
 const DEFAULT_MENUS = {dashboard:true,products:true,movements:true,reports:true};
 const DEFAULT_COLS = {
@@ -170,10 +163,8 @@ function mergeDefaults(s){
 }
 function uid(){return "id-"+Math.random().toString(36).slice(2,10)+Date.now().toString(36);}
 function nowISO(){return new Date().toISOString();}
-
 let state = null;
 let session = null;
-
 function seed(){
   const adminId = uid();
   return {
@@ -185,14 +176,12 @@ function seed(){
     settings:mergeDefaults({app_title:"Vincard Stok Takip",primary_color:"#2563EB"})
   };
 }
-
 function hashPw(pw){ try { return dcodeIO.bcrypt.hashSync(String(pw), 10); } catch(e){ return String(pw); } }
 function verifyPw(pw, hash){
   if(!hash) return false;
   if(String(hash).startsWith("$2")) { try { return dcodeIO.bcrypt.compareSync(String(pw), hash); } catch(e){ return false; } }
   return String(pw) === String(hash);
 }
-
 const fmtTRY = n => new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",maximumFractionDigits:2}).format(Number(n||0));
 const fmtNum = n => new Intl.NumberFormat("tr-TR",{maximumFractionDigits:2}).format(Number(n||0));
 function fmtDate(iso){ try { return new Date(iso).toLocaleString("tr-TR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}); } catch(e){ return iso; } }
@@ -202,7 +191,6 @@ function matchProduct(p,q){if(!q)return true;const nq=normTr(q);if(!nq)return tr
 function openModal(html){document.getElementById("modalBody").innerHTML=html;document.getElementById("modalBg").classList.add("open");}
 function closeModal(){document.getElementById("modalBg").classList.remove("open");}
 function currentUser(){return session ? state.users.find(u=>u.id===session.user_id) : null;}
-
 /* ============ GITHUB API ============ */
 function loadGhConfig(){
   try { ghConfig = JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || "null"); } catch(e){ ghConfig = null; }
@@ -216,7 +204,6 @@ function resetGithubConfig(){
   ghConfig = null; ghToken = null; session = null; sessionStorage.removeItem("vincard_session");
   location.reload();
 }
-
 async function ghFetch(url, opts){
   opts = opts || {};
   opts.headers = Object.assign({}, opts.headers||{}, {
@@ -239,7 +226,6 @@ async function ghFetch(url, opts){
   }
   return res;
 }
-
 async function ghGetStore(){
   const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${STORE_PATH}?ref=${encodeURIComponent(ghConfig.branch)}&_=${Date.now()}`;
   const res = await ghFetch(url, { cache: "no-store" });
@@ -252,7 +238,6 @@ async function ghGetStore(){
   const content = decodeURIComponent(escape(atob(b64)));
   return { content: JSON.parse(content), sha: data.sha };
 }
-
 async function ghPutStore(stateObj, sha){
   const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${STORE_PATH}`;
   const cleaned = JSON.parse(JSON.stringify(stateObj));
@@ -272,7 +257,6 @@ async function ghPutStore(stateObj, sha){
   const data = await res.json();
   return data.content.sha;
 }
-
 function mergeStates(local, remote){
   const mvMap = {};
   (remote.movements || []).forEach(m => mvMap[m.id] = m);
@@ -286,7 +270,6 @@ function mergeStates(local, remote){
     settings:   mergeDefaults(local.settings || remote.settings || {})
   };
 }
-
 function normalizeState(s){
   s = s || {};
   s.users = s.users || [];
@@ -297,7 +280,6 @@ function normalizeState(s){
   s.settings = mergeDefaults(s.settings || {});
   return s;
 }
-
 async function pullState(silent){
   if(!silent) setSyncStatus("loading");
   try{
@@ -313,7 +295,6 @@ async function pullState(silent){
     return { error: e };
   }
 }
-
 async function pushState(){
   setSyncStatus("saving");
   let attempts = 0;
@@ -344,7 +325,6 @@ async function pushState(){
   setSyncStatus("error");
   throw new Error("Çakışma çözülemedi (3 deneme başarısız). Sayfayı yenileyip tekrar deneyin.");
 }
-
 function save(){
   saveQueue = saveQueue.then(() => pushState().catch(err => {
     console.error("Push error:", err);
@@ -352,7 +332,6 @@ function save(){
   }));
   return saveQueue;
 }
-
 function setSyncStatus(s){ syncStatus = s; updateSyncBadge(); }
 function updateSyncBadge(){
   const el = document.getElementById("syncBadge");
@@ -389,7 +368,6 @@ function showSyncMenu(){
       <button class="btn btn-primary btn-sm ml-auto" onclick="closeModal()">Kapat</button>
     </div>`);
 }
-
 /* ============ WIZARD ============ */
 function showWizard(){
   document.getElementById("wizardView").classList.remove("hidden");
@@ -460,7 +438,6 @@ function showHelp(){
     </ol>
     <div class="text-right mt-4"><button class="btn btn-primary btn-sm" onclick="closeModal()">Anladım</button></div>`);
 }
-
 /* ============ AUTH ============ */
 function showLogin(){
   document.getElementById("wizardView").classList.add("hidden");
@@ -501,7 +478,6 @@ function logout(){
   document.getElementById("appView").classList.add("hidden");
   showLogin();
 }
-
 /* ============ ROUTER ============ */
 const ROUTES=[
   {key:"dashboard",label:"Panel",icon:"■",render:renderDashboard},
@@ -531,7 +507,6 @@ function renderApp(){
   }
   route.render();
 }
-
 function startRefresh(){
   stopRefresh();
   refreshTimer = setInterval(async ()=>{
@@ -546,7 +521,6 @@ function startRefresh(){
   }, REFRESH_INTERVAL_MS);
 }
 function stopRefresh(){ if(refreshTimer){ clearInterval(refreshTimer); refreshTimer=null; } }
-
 async function boot(){
   loadGhConfig();
   updateSyncBadge();
@@ -580,7 +554,6 @@ async function boot(){
   renderApp();
   startRefresh();
 }
-
 /* ============ DASHBOARD ============ */
 function renderDashboard(){
   const w=state.settings.widgets||DEFAULT_WIDGETS;
@@ -622,7 +595,6 @@ function renderDashboard(){
     });
   }
 }
-
 /* ============ PRODUCTS ============ */
 let productFilter={q:"",cat:"all"};
 function renderProducts(){
@@ -634,6 +606,8 @@ function renderProducts(){
     return true;
   });
   const catMap=Object.fromEntries(state.categories.map(c=>[c.id,c]));
+  const isAdmin = u.role === "admin";
+  const hasAny = state.products.length > 0;
   document.getElementById("pageBody").innerHTML=`
     <div class="flex justify-between items-end flex-wrap gap-4 mb-6">
       <div><h1 class="text-3xl font-bold tracking-tight">Ürün Yönetimi</h1><p class="text-sm text-slate-500 mt-1">Toplam ${filtered.length} ürün</p></div>
@@ -641,6 +615,7 @@ function renderProducts(){
         <button class="btn btn-outline" onclick="exportProductsExcel()">Excel'e Aktar</button>
         <label class="btn btn-outline cursor-pointer">Excel'den Yükle<input type="file" accept=".xlsx,.xls,.csv" class="hidden" onchange="importProductsExcel(event)" /></label>
         <button class="btn btn-ghost btn-sm" onclick="downloadProductTemplate()">Şablon</button>
+        ${isAdmin?`<button class="btn btn-danger" onclick="deleteAllProducts()" ${hasAny?"":"disabled"} data-testid="delete-all-products-btn">Tümünü Sil</button>`:""}
         <button class="btn btn-primary" onclick="productModal()">+ Yeni Ürün</button>
       </div>
     </div>
@@ -690,11 +665,53 @@ function saveProduct(e,id){
   e.preventDefault();const fd=new FormData(e.target);const data={};fd.forEach((v,k)=>data[k]=v);
   ["quantity","critical_level","unit_price"].forEach(k=>data[k]=+data[k]||0);
   if(!id && state.products.some(p=>p.code===data.code)){toast("Bu ürün kodu zaten var","error");return;}
+  if(!id){
+    const nameKey = String(data.name||"").trim().toLocaleLowerCase("tr-TR");
+    if(nameKey && state.products.some(p => String(p.name||"").trim().toLocaleLowerCase("tr-TR") === nameKey)){
+      toast("Bu ürün adı zaten var","error");return;
+    }
+  }
   if(id){Object.assign(state.products.find(p=>p.id===id),data,{updated_at:nowISO()});}
   else{state.products.push({id:uid(),...data,created_at:nowISO(),updated_at:nowISO()});}
   save();closeModal();renderProducts();toast(id?"Ürün güncellendi":"Ürün eklendi");
 }
 function deleteProduct(id){if(!confirm("Ürünü silmek istediğinize emin misiniz?"))return;state.products=state.products.filter(p=>p.id!==id);save();renderProducts();toast("Silindi");}
+
+/* ==== TÜMÜNÜ SİL (admin) ==== */
+function deleteAllProducts(){
+  const u = currentUser();
+  if(!u || u.role !== "admin"){ toast("Bu işlem için yetkiniz yok","error"); return; }
+  if(!state.products.length){ toast("Silinecek ürün yok","error"); return; }
+  const pCount = state.products.length;
+  const mCount = state.movements.length;
+  openModal(`<h3 class="text-lg font-semibold mb-2 text-rose-700">Tüm Ürünleri Sil</h3>
+    <p class="text-sm text-slate-600 mb-3">Bu işlem geri alınamaz. Aşağıdakiler <b>kalıcı olarak</b> silinecek:</p>
+    <ul class="text-sm text-slate-700 list-disc pl-5 mb-4">
+      <li><b>${pCount}</b> ürün</li>
+      <li><b>${mCount}</b> stok hareketi (bağlı kayıtlar temizlenir)</li>
+    </ul>
+    <p class="text-sm text-slate-600 mb-2">Onaylamak için aşağıya büyük harflerle <span class="mono font-bold">SIL</span> yazın:</p>
+    <input id="delAllConfirmInput" class="input mono" placeholder="SIL" autocomplete="off"
+      oninput="document.getElementById('delAllConfirmBtn').disabled = (this.value !== 'SIL');"
+      data-testid="delete-all-confirm-input" />
+    <div class="flex justify-end gap-2 mt-5">
+      <button type="button" class="btn btn-outline" onclick="closeModal()">İptal</button>
+      <button type="button" id="delAllConfirmBtn" class="btn btn-danger" disabled onclick="confirmDeleteAll()" data-testid="delete-all-confirm-btn">Kalıcı Olarak Sil</button>
+    </div>`);
+  setTimeout(()=>{ const el = document.getElementById("delAllConfirmInput"); if(el) el.focus(); }, 50);
+}
+function confirmDeleteAll(){
+  const el = document.getElementById("delAllConfirmInput");
+  if(!el || el.value !== "SIL"){ toast("Onay için 'SIL' yazmalısınız","error"); return; }
+  const u = currentUser();
+  if(!u || u.role !== "admin"){ toast("Yetkiniz yok","error"); return; }
+  state.products = [];
+  state.movements = [];
+  save();
+  closeModal();
+  renderProducts();
+  toast("Tüm ürünler ve hareket kayıtları silindi");
+}
 
 const PRODUCT_HEADERS=["Kod","Ürün Adı","Kategori","Birim","Miktar","Kritik Seviye","Birim Fiyat","Konum","Açıklama"];
 function exportProductsExcel(){
@@ -729,11 +746,10 @@ function importProductsExcel(e){
       const idx={};
       const map={code:["kod","code","sku","ürün kodu","urun kodu"],name:["ürün adı","urun adi","ad","name","ürün","urun"],category:["kategori","category"],unit:["birim","unit"],quantity:["miktar","quantity","stok","adet"],critical:["kritik seviye","kritik","critical","min","minimum"],price:["birim fiyat","fiyat","price","unit price"],location:["konum","lokasyon","location"],description:["açıklama","aciklama","description","not"]};
       Object.entries(map).forEach(([k,alts])=>{idx[k]=header.findIndex(h=>alts.includes(h));});
-      
-      // DÜZELTME 1: Excel'de 'Kod' sütunu hiç yoksa bile sistem hata verip durmasın.
+
       if(idx.name<0){toast("'Ürün Adı' kolonu zorunlu","error");return;}
-      
-      let added=0,updated=0,newCats=0,skipped=0;
+
+      let added=0,updated=0,newCats=0,skippedNoName=0,duplicateInFile=0;
       const catByName={};state.categories.forEach(c=>catByName[c.name.toLowerCase()]=c);
       const findOrCreateCat=name=>{
         if(!name)return null;
@@ -742,22 +758,30 @@ function importProductsExcel(e){
         const c={id:uid(),name:String(name).trim(),color:"#2563EB"};state.categories.push(c);catByName[key]=c;newCats++;return c.id;
       };
       const toNum=v=>{if(v==null||v=="")return 0;const s=String(v).replace(/\./g,"").replace(",",".");const n=parseFloat(s);return isNaN(n)?0:n;};
-      
+      const nameKey = s => String(s||"").trim().toLocaleLowerCase("tr-TR");
+
+      const seenCodes = new Set();
+      const seenNames = new Set();
+
       for(let i=1;i<rows.length;i++){
         const r=rows[i];
         const name=String(r[idx.name]||"").trim();
-        
-        // DÜZELTME 2: Kodu oku, eğer Excel'de kodu boşsa sistemin atlamaması için otomatik geçici kod üret.
-        let code = idx.code >= 0 ? String(r[idx.code] || "").trim() : "";
-        if(!code) {
-          code = "VK-" + Math.floor(10000 + Math.random() * 90000);
+        if(!name){ skippedNoName++; continue; }
+
+        const rawCode = idx.code >= 0 ? String(r[idx.code] || "").trim() : "";
+        const nKey = nameKey(name);
+
+        // Aşama A — Excel içi tekrar taraması: ilk satır alınır, sonrakiler atlanır
+        if(rawCode){
+          if(seenCodes.has(rawCode)){ duplicateInFile++; continue; }
+          seenCodes.add(rawCode);
+        } else {
+          if(seenNames.has(nKey)){ duplicateInFile++; continue; }
+          seenNames.add(nKey);
         }
 
-        // Sadece ürün adı tamamen boşsa o satırı silsin/atlasın.
-        if(!name){skipped++;continue;}
-        
         const doc={
-          code,name,
+          name,
           category_id:idx.category>=0?findOrCreateCat(r[idx.category]):null,
           unit:idx.unit>=0&&r[idx.unit]?String(r[idx.unit]).trim():"adet",
           quantity:idx.quantity>=0?toNum(r[idx.quantity]):0,
@@ -766,35 +790,44 @@ function importProductsExcel(e){
           location:idx.location>=0?String(r[idx.location]||"").trim():"",
           description:idx.description>=0?String(r[idx.description]||"").trim():""
         };
-        
-        // DÜZELTME 3: Çift kayıt (mükerrer) engelleme mantığı.
-        // Ürünü hem kodundan hem de sistemdeki ürün isminden kontrol eder.
-        const existing = state.products.find(p => 
-          (p.code && p.code === code) || 
-          (p.name.toLowerCase() === name.toLowerCase())
-        );
+
+        // Aşama B — Sistemdeki ürünle eşleşme (kesin öncelik)
+        let existing = null;
+        if(rawCode){
+          // 1) Kod dolu -> yalnızca koda göre ara
+          existing = state.products.find(p => p.code && p.code === rawCode);
+        } else {
+          // 2) Kod boş -> isme göre (case-insensitive, trim) ara
+          existing = state.products.find(p => nameKey(p.name) === nKey);
+        }
 
         if(existing){
-          // Ürün zaten varsa sadece bilgilerini güncelle (Çift eklemez)
-          Object.assign(existing,doc,{updated_at:nowISO()});
-          // Eğer sistemdeki eski ürünün zaten gerçek bir kodu varsa, geçici kodla ezilmesin diye koruyoruz.
-          if(existing.code && !idx.code) { existing.code = existing.code; }
+          // Güncelleme: koda güven (isim değişebilir); kod boşsa mevcut kodu koru
+          const patch = {...doc};
+          if(rawCode){ patch.code = rawCode; }
+          Object.assign(existing, patch, {updated_at:nowISO()});
           updated++;
-        }
-        else{
-          // Ürün sistemde hiç yoksa (eklenmeyen ürünse) yeni olarak ekle
-          state.products.push({id:uid(),...doc,created_at:nowISO(),updated_at:nowISO()});
+        } else {
+          // Yeni ekle: kod boşsa geçici kod üret
+          const finalCode = rawCode || ("VK-" + Math.floor(10000 + Math.random() * 90000));
+          state.products.push({id:uid(),code:finalCode,...doc,created_at:nowISO(),updated_at:nowISO()});
           added++;
         }
       }
       save();renderProducts();
-      toast(added+" yeni, "+updated+" güncellendi"+(newCats?", "+newCats+" yeni kategori":"")+(skipped?", "+skipped+" atlandı":""));
+      const parts = [
+        added+" yeni",
+        updated+" güncellendi",
+        duplicateInFile+" dosya-içi tekrar atlandı",
+        skippedNoName+" ad-eksik atlandı"
+      ];
+      if(newCats) parts.push(newCats+" yeni kategori");
+      toast(parts.join(", "));
     }catch(err){console.error(err);toast("Dosya okunamadı: "+err.message,"error");}
     e.target.value="";
   };
   reader.readAsArrayBuffer(file);
 }
-
 /* ============ MOVEMENTS ============ */
 let mvFilter={type:"all",product:"all",location:""};
 function renderMovements(){
@@ -889,7 +922,6 @@ function deleteMovement(id){
   if(p){p.quantity+=m.type==="in"?-m.quantity:m.quantity;}
   state.movements=state.movements.filter(x=>x.id!==id);save();renderMovements();toast("Silindi");
 }
-
 /* ============ REPORTS ============ */
 let reportRange={start:null,end:null},reportFilters={type:"all",product:"all",user:"all",location:""};
 function rangeThisWeek(){const now=new Date();const day=(now.getDay()+6)%7;const s=new Date(now);s.setDate(now.getDate()-day);s.setHours(0,0,0,0);const e=new Date(s);e.setDate(s.getDate()+6);e.setHours(23,59,59,999);return {start:s.toISOString(),end:e.toISOString()};}
@@ -966,7 +998,6 @@ function exportExcel(){
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Stok Hareketleri");
   XLSX.writeFile(wb,`stok-hareketleri-${Date.now()}.xlsx`);toast("Excel indirildi");
 }
-
 /* ============ ADMIN ============ */
 let adminTab="widgets";
 function renderAdmin(){
@@ -1120,7 +1151,6 @@ function factoryReset(){
   if(!confirm("TÜM verileri sıfırlamak istediğinize emin misiniz?")) return;
   state = seed(); save(); boot(); toast("Sıfırlandı");
 }
-
 /* ============ BOOT ============ */
 window.addEventListener("DOMContentLoaded", () => { boot(); });
 window.addEventListener("beforeunload", () => { stopRefresh(); });
