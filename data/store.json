@@ -5028,6 +5028,20 @@
       "description": "ALLURE GRAND PANEL, WITHOUT ROOM NUMBER, BLACK WITH BLACK BELL, BLACK FRAME",
       "created_at": "2026-09-02T12:41:24.745Z",
       "updated_at": "2026-09-02T12:41:24.745Z"
+    },
+    {
+      "id": "id-mlsriujumtl6uga1",
+      "code": "4818299",
+      "name": "MANYETİK LCU 3322",
+      "category_id": "id-li2k7ztkmtk34t8o",
+      "unit": "adet",
+      "quantity": 14,
+      "critical_level": 0,
+      "unit_price": 0,
+      "location": "",
+      "description": "",
+      "created_at": "2026-09-03T07:13:06.025Z",
+      "updated_at": "2026-09-03T07:13:06.025Z"
     }
   ],
   "movements": [
