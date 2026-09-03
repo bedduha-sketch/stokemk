@@ -419,13 +419,13 @@
       "name": "4K MAD2 MASTER KART",
       "category_id": "id-fzyrvbu6mtk34t8m",
       "unit": "adet",
-      "quantity": 2002,
+      "quantity": 1997,
       "critical_level": 2000,
       "unit_price": 0,
       "location": "",
       "description": "RFID KEYCARD MIFARE CLASSIC 4K WHITE",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-02T13:03:23.862Z"
+      "updated_at": "2026-09-03T06:34:40.463Z"
     },
     {
       "id": "id-qogubx21mtk34t8n",
@@ -5132,6 +5132,20 @@
       "user_name": "CAN EKEYILMAZ",
       "happened_at": "2026-09-03T06:31:20.660Z",
       "created_at": "2026-09-03T06:31:20.660Z"
+    },
+    {
+      "id": "id-ji2uqy7smtl5h1an",
+      "product_id": "id-ya3hrp9jmtk34t8n",
+      "product_code": "4814101",
+      "product_name": "4K MAD2 MASTER KART",
+      "type": "out",
+      "quantity": 5,
+      "target_location": null,
+      "reason": null,
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "Ali ÖZEN",
+      "happened_at": "2026-09-03T06:34:40.463Z",
+      "created_at": "2026-09-03T06:34:40.463Z"
     }
   ],
   "settings": {
