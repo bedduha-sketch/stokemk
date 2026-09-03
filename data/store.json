@@ -525,12 +525,12 @@
       "category_id": "id-fzyrvbu6mtk34t8m",
       "unit": "adet",
       "quantity": 125,
-      "critical_level": 0,
+      "critical_level": 100,
       "unit_price": 0,
       "location": "",
       "description": "CRYPTO MASTER KART VISION MASTER KART",
       "created_at": "2026-09-03T08:29:16.163Z",
-      "updated_at": "2026-09-03T08:29:16.163Z"
+      "updated_at": "2026-09-03T09:21:13.539Z"
     },
     {
       "id": "id-0ury7pbymtl9kemb",
