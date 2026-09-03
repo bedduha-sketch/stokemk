@@ -2823,7 +2823,7 @@
       "name": "MANYETİK LCU 3300 4.5V (T3)",
       "category_id": "id-li2k7ztkmtk34t8o",
       "unit": "adet",
-      "quantity": 1,
+      "quantity": 2,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
@@ -5086,20 +5086,6 @@
       "user_name": "ali özen",
       "happened_at": "2026-09-03T06:26:17.277Z",
       "created_at": "2026-09-03T06:26:17.277Z"
-    },
-    {
-      "id": "id-tsf6vqd8mtl59xnw",
-      "product_id": "id-3hcfsbzimtk34t8o",
-      "product_code": "4816210",
-      "product_name": "MANYETİK LCU 3300 4.5V (T3)",
-      "type": "out",
-      "quantity": 1,
-      "target_location": "ADM grand otel",
-      "reason": null,
-      "user_id": "id-umv29fzpmtk3a4nj",
-      "user_name": "ali özen",
-      "happened_at": "2026-09-03T06:29:09.164Z",
-      "created_at": "2026-09-03T06:29:09.164Z"
     },
     {
       "id": "id-092eqpk1mtl5blt4",
