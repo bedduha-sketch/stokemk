@@ -2212,13 +2212,13 @@
       "name": "SENTINEL 1 ADVANCED  TRANSPARANT PANEL",
       "category_id": "id-i227be5umtk34t8n",
       "unit": "adet",
-      "quantity": 32,
+      "quantity": 33,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "EOL",
       "created_at": "2026-09-03T08:29:16.168Z",
-      "updated_at": "2026-09-03T08:29:16.168Z"
+      "updated_at": "2026-09-03T09:00:29.696Z"
     },
     {
       "id": "id-z4n6o2hfmtl9kemg",
@@ -7807,6 +7807,20 @@
       "user_name": "CAN EKEYILMAZ",
       "happened_at": "2026-09-03T08:59:48.021Z",
       "created_at": "2026-09-03T08:59:48.021Z"
+    },
+    {
+      "id": "id-sav0ayczmtlaok8w",
+      "product_id": "id-c98fgatwmtl9kemg",
+      "product_code": "EOL",
+      "product_name": "SENTINEL 1 ADVANCED  TRANSPARANT PANEL",
+      "type": "in",
+      "quantity": 1,
+      "target_location": "Ana Depo",
+      "reason": "depodaki kasa için keyboard ve pil kaseti alındı. transparant paneli stoğa işlendi.",
+      "user_id": "id-tejy3dmpmtk2yr8i",
+      "user_name": "CAN EKEYILMAZ",
+      "happened_at": "2026-09-03T09:00:29.696Z",
+      "created_at": "2026-09-03T09:00:29.696Z"
     }
   ],
   "settings": {
