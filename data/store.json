@@ -539,12 +539,12 @@
       "category_id": "id-fzyrvbu6mtk34t8m",
       "unit": "adet",
       "quantity": 310,
-      "critical_level": 0,
+      "critical_level": 200,
       "unit_price": 0,
       "location": "",
       "description": "KEYCARD MAGSTRIPE STANDARD LOCO",
       "created_at": "2026-09-03T08:29:16.163Z",
-      "updated_at": "2026-09-03T08:29:16.163Z"
+      "updated_at": "2026-09-03T09:21:21.460Z"
     },
     {
       "id": "id-21vslr5wmtl9kemb",
