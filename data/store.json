@@ -903,12 +903,12 @@
       "category_id": "id-qmgcf4qumtk34t8n",
       "unit": "adet",
       "quantity": 0,
-      "critical_level": 0,
+      "critical_level": 2,
       "unit_price": 0,
       "location": "",
       "description": "",
       "created_at": "2026-09-03T08:29:16.163Z",
-      "updated_at": "2026-09-03T09:05:36.901Z"
+      "updated_at": "2026-09-03T09:22:26.707Z"
     },
     {
       "id": "id-txlavcqlmtl9kemb",
