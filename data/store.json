@@ -4020,13 +4020,13 @@
       "name": "ESSENCE V2 KAPAK BEYAZ",
       "category_id": "id-0n4eyff9mtk34t8o",
       "unit": "adet",
-      "quantity": 8,
+      "quantity": 4,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "SERVICE COVER ESSENCE V2, WHITE (RAL9010)",
       "created_at": "2026-09-03T08:29:16.181Z",
-      "updated_at": "2026-09-03T08:29:16.181Z"
+      "updated_at": "2026-09-03T08:31:35.646Z"
     },
     {
       "id": "id-0f233mbrmtl9kemt",
@@ -7683,7 +7683,22 @@
       "updated_at": "2026-09-03T08:29:16.258Z"
     }
   ],
-  "movements": [],
+  "movements": [
+    {
+      "id": "id-q0m3q8kymtl9ne8u",
+      "product_id": "id-s2j1gblcmtl9kemt",
+      "product_code": "4827614A",
+      "product_name": "ESSENCE V2 KAPAK BEYAZ",
+      "type": "out",
+      "quantity": 4,
+      "target_location": "le meridyen bodrum",
+      "reason": "arızalı ürünler için",
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "Ali ÖZEN",
+      "happened_at": "2026-09-03T08:31:35.646Z",
+      "created_at": "2026-09-03T08:31:35.646Z"
+    }
+  ],
   "settings": {
     "app_title": "Vincard Stok Takip",
     "primary_color": "#2563EB",
