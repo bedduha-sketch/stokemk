@@ -730,7 +730,7 @@ function importProductsExcel(e){
       const map={code:["kod","code","sku","ürün kodu","urun kodu"],name:["ürün adı","urun adi","ad","name","ürün","urun"],category:["kategori","category"],unit:["birim","unit"],quantity:["miktar","quantity","stok","adet"],critical:["kritik seviye","kritik","critical","min","minimum"],price:["birim fiyat","fiyat","price","unit price"],location:["konum","lokasyon","location"],description:["açıklama","aciklama","description","not"]};
       Object.entries(map).forEach(([k,alts])=>{idx[k]=header.findIndex(h=>alts.includes(h));});
       
-      // DEĞİŞİKLİK 1: Excel'de 'Kod' sütunu hiç yoksa bile hata vermesin, sistemi durdurmasın.
+      // DÜZELTME 1: Excel'de 'Kod' sütunu hiç yoksa bile sistem hata verip durmasın.
       if(idx.name<0){toast("'Ürün Adı' kolonu zorunlu","error");return;}
       
       let added=0,updated=0,newCats=0,skipped=0;
@@ -747,13 +747,13 @@ function importProductsExcel(e){
         const r=rows[i];
         const name=String(r[idx.name]||"").trim();
         
-        // DEĞİŞİKLİK 2: Kodu oku, eğer 'Kod' sütunu yoksa ya da satır boşsa otomatik benzersiz kod üret
+        // DÜZELTME 2: Kodu oku, eğer Excel'de kodu boşsa sistemin atlamaması için otomatik geçici kod üret.
         let code = idx.code >= 0 ? String(r[idx.code] || "").trim() : "";
         if(!code) {
           code = "VK-" + Math.floor(10000 + Math.random() * 90000);
         }
 
-        // Artık sadece ürün adı boşsa satırı atlayacak
+        // Sadece ürün adı tamamen boşsa o satırı silsin/atlasın.
         if(!name){skipped++;continue;}
         
         const doc={
@@ -766,9 +766,26 @@ function importProductsExcel(e){
           location:idx.location>=0?String(r[idx.location]||"").trim():"",
           description:idx.description>=0?String(r[idx.description]||"").trim():""
         };
-        const existing=state.products.find(p=>p.code===code);
-        if(existing){Object.assign(existing,doc,{updated_at:nowISO()});updated++;}
-        else{state.products.push({id:uid(),...doc,created_at:nowISO(),updated_at:nowISO()});added++;}
+        
+        // DÜZELTME 3: Çift kayıt (mükerrer) engelleme mantığı.
+        // Ürünü hem kodundan hem de sistemdeki ürün isminden kontrol eder.
+        const existing = state.products.find(p => 
+          (p.code && p.code === code) || 
+          (p.name.toLowerCase() === name.toLowerCase())
+        );
+
+        if(existing){
+          // Ürün zaten varsa sadece bilgilerini güncelle (Çift eklemez)
+          Object.assign(existing,doc,{updated_at:nowISO()});
+          // Eğer sistemdeki eski ürünün zaten gerçek bir kodu varsa, geçici kodla ezilmesin diye koruyoruz.
+          if(existing.code && !idx.code) { existing.code = existing.code; }
+          updated++;
+        }
+        else{
+          // Ürün sistemde hiç yoksa (eklenmeyen ürünse) yeni olarak ekle
+          state.products.push({id:uid(),...doc,created_at:nowISO(),updated_at:nowISO()});
+          added++;
+        }
       }
       save();renderProducts();
       toast(added+" yeni, "+updated+" güncellendi"+(newCats?", "+newCats+" yeni kategori":"")+(skipped?", "+skipped+" atlandı":""));
