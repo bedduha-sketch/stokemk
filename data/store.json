@@ -49,16 +49,6 @@
       "is_active": true,
       "password": "$2a$10$QkVpEbh.yZt7faqbArUixO2GMAQCiNs5KXQPiVxshFAbZPWJrzAhG",
       "created_at": "2026-09-02T12:52:17.577Z"
-    },
-    {
-      "id": "id-x14gngg0mtl5w6gk",
-      "username": "sym",
-      "name": "deneme",
-      "email": "",
-      "role": "user",
-      "is_active": true,
-      "password": "$2a$10$T/KuZRGyGmJLUUXQVhvi.ehxPzZ/YoT7B0oCvWdOEztq1ko4QWKby",
-      "created_at": "2026-09-03T06:46:27.074Z"
     }
   ],
   "categories": [
