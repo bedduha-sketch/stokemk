@@ -447,6 +447,12 @@
       "name": "Accor Ofise",
       "kind": "diger",
       "auto_created": true
+    },
+    {
+      "id": "id-y4bs1fsjmtl9p4rb",
+      "name": "ibis west otel",
+      "kind": "diger",
+      "auto_created": true
     }
   ],
   "products": [
@@ -1744,13 +1750,13 @@
       "name": "RFID USB KİLİT PROGRAMLAMA KABLO SETİ",
       "category_id": "id-fmh7hoscmtk34t8n",
       "unit": "adet",
-      "quantity": 27,
+      "quantity": 26,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "CABLE RJ12 TO USB ADAPTER VE SERVICE CABLE RJ12 FOR 3/4G RFID LCU & E-CYLINDER",
       "created_at": "2026-09-03T08:29:16.167Z",
-      "updated_at": "2026-09-03T08:32:34.246Z"
+      "updated_at": "2026-09-03T08:32:56.663Z"
     },
     {
       "id": "id-1ey0prynmtl9kemf",
@@ -7745,6 +7751,20 @@
       "user_name": "Ali ÖZEN",
       "happened_at": "2026-09-03T08:32:34.246Z",
       "created_at": "2026-09-03T08:32:34.246Z"
+    },
+    {
+      "id": "id-txpxq6nsmtl9p4rb",
+      "product_id": "id-de0o30vlmtl9kemf",
+      "product_code": "686001061  686001050",
+      "product_name": "RFID USB KİLİT PROGRAMLAMA KABLO SETİ",
+      "type": "out",
+      "quantity": 1,
+      "target_location": "ibis west otel",
+      "reason": "ibis west otel locklink pc ye geçiş yaptığı için satıldı.\n",
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "Ali ÖZEN",
+      "happened_at": "2026-09-03T08:32:56.663Z",
+      "created_at": "2026-09-03T08:32:56.663Z"
     }
   ],
   "settings": {
