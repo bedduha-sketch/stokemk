@@ -609,12 +609,12 @@
       "category_id": "id-fzyrvbu6mtk34t8m",
       "unit": "adet",
       "quantity": 3117,
-      "critical_level": 0,
+      "critical_level": 2000,
       "unit_price": 0,
       "location": "",
       "description": "RFID KC PLUS EV2 4K WHITE",
       "created_at": "2026-09-03T08:29:16.163Z",
-      "updated_at": "2026-09-03T08:29:16.163Z"
+      "updated_at": "2026-09-03T09:21:58.523Z"
     },
     {
       "id": "id-r9b945ahmtl9kemb",
