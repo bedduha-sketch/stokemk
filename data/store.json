@@ -23,11 +23,11 @@
     {
       "id": "id-umv29fzpmtk3a4nj",
       "username": "ali",
-      "name": "Ali ÖZEN",
+      "name": "ali özen",
       "email": "",
       "role": "admin",
       "is_active": true,
-      "password": "$2a$10$mtOmNCWqeMzhZumw/3rf5usQV3lcgL79QbUy3ZBnkLZ5eMGdiu/Pq",
+      "password": "$2a$10$7fZfl3nqmEGGFAUaoBeafuj6g8Evt8m.ey8rswF89J.WAL.hDnEaK",
       "created_at": "2026-09-02T12:45:32.888Z"
     },
     {
@@ -1329,13 +1329,13 @@
       "name": "RFID USB KİLİT PROGRAMLAMA KABLO SETİ",
       "category_id": "id-fmh7hoscmtk34t8n",
       "unit": "adet",
-      "quantity": 28,
+      "quantity": 26,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "CABLE RJ12 TO USB ADAPTER VE SERVICE CABLE RJ12 FOR 3/4G RFID LCU & E-CYLINDER",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-02T12:41:24.743Z"
+      "updated_at": "2026-09-03T06:31:20.660Z"
     },
     {
       "id": "id-gt8a50e0mtk34t8n",
@@ -5118,6 +5118,20 @@
       "user_name": "CAN EKEYILMAZ",
       "happened_at": "2026-09-03T06:30:40.012Z",
       "created_at": "2026-09-03T06:30:40.012Z"
+    },
+    {
+      "id": "id-pu8lnxrnmtl5cr4k",
+      "product_id": "id-elerotk3mtk34t8n",
+      "product_code": "686001061  686001050",
+      "product_name": "RFID USB KİLİT PROGRAMLAMA KABLO SETİ",
+      "type": "out",
+      "quantity": 1,
+      "target_location": "Ana Depo",
+      "reason": "ibis west otel locklink pc ye geçiş yaptığı için satıldı.",
+      "user_id": "id-tejy3dmpmtk2yr8i",
+      "user_name": "CAN EKEYILMAZ",
+      "happened_at": "2026-09-03T06:31:20.660Z",
+      "created_at": "2026-09-03T06:31:20.660Z"
     }
   ],
   "settings": {
