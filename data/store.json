@@ -390,6 +390,12 @@
       "name": "le meridyen bodrum",
       "kind": "diger",
       "auto_created": true
+    },
+    {
+      "id": "id-dnvm8elimtl59xnw",
+      "name": "ADM grand otel",
+      "kind": "diger",
+      "auto_created": true
     }
   ],
   "products": [
@@ -1329,7 +1335,7 @@
       "location": "",
       "description": "CABLE RJ12 TO USB ADAPTER VE SERVICE CABLE RJ12 FOR 3/4G RFID LCU & E-CYLINDER",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-03T06:28:39.436Z"
+      "updated_at": "2026-09-02T12:41:24.743Z"
     },
     {
       "id": "id-gt8a50e0mtk34t8n",
@@ -2807,13 +2813,13 @@
       "name": "MANYETİK LCU 3300 4.5V (T3)",
       "category_id": "id-li2k7ztkmtk34t8o",
       "unit": "adet",
-      "quantity": 2,
+      "quantity": 1,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "LCU 3300 CLASSIC MAG 4.5V (T3)",
       "created_at": "2026-09-02T12:41:24.744Z",
-      "updated_at": "2026-09-02T12:41:24.744Z"
+      "updated_at": "2026-09-03T06:29:09.164Z"
     },
     {
       "id": "id-qmcyo8s4mtk34t8o",
@@ -5070,6 +5076,20 @@
       "user_name": "ali özen",
       "happened_at": "2026-09-03T06:26:17.277Z",
       "created_at": "2026-09-03T06:26:17.277Z"
+    },
+    {
+      "id": "id-tsf6vqd8mtl59xnw",
+      "product_id": "id-3hcfsbzimtk34t8o",
+      "product_code": "4816210",
+      "product_name": "MANYETİK LCU 3300 4.5V (T3)",
+      "type": "out",
+      "quantity": 1,
+      "target_location": "ADM grand otel",
+      "reason": null,
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "ali özen",
+      "happened_at": "2026-09-03T06:29:09.164Z",
+      "created_at": "2026-09-03T06:29:09.164Z"
     }
   ],
   "settings": {
