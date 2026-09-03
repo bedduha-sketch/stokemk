@@ -1116,12 +1116,12 @@
       "category_id": "id-90e6qm0jmtk34t8n",
       "unit": "adet",
       "quantity": 1,
-      "critical_level": 0,
+      "critical_level": 5,
       "unit_price": 0,
       "location": "",
       "description": "MAIN CONTROL UNIT 4G (6334) FOR ALLURE",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-02T12:41:24.743Z"
+      "updated_at": "2026-09-03T07:25:36.704Z"
     },
     {
       "id": "id-ocjykqnymtk34t8n",
