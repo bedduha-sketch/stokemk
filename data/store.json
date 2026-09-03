@@ -23,11 +23,11 @@
     {
       "id": "id-umv29fzpmtk3a4nj",
       "username": "ali",
-      "name": "ali özen",
+      "name": "Ali ÖZEN",
       "email": "",
       "role": "admin",
       "is_active": true,
-      "password": "$2a$10$7fZfl3nqmEGGFAUaoBeafuj6g8Evt8m.ey8rswF89J.WAL.hDnEaK",
+      "password": "$2a$10$mtOmNCWqeMzhZumw/3rf5usQV3lcgL79QbUy3ZBnkLZ5eMGdiu/Pq",
       "created_at": "2026-09-02T12:45:32.888Z"
     },
     {
@@ -1329,13 +1329,13 @@
       "name": "RFID USB KİLİT PROGRAMLAMA KABLO SETİ",
       "category_id": "id-fmh7hoscmtk34t8n",
       "unit": "adet",
-      "quantity": 27,
+      "quantity": 28,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "CABLE RJ12 TO USB ADAPTER VE SERVICE CABLE RJ12 FOR 3/4G RFID LCU & E-CYLINDER",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-03T06:30:40.012Z"
+      "updated_at": "2026-09-02T12:41:24.743Z"
     },
     {
       "id": "id-gt8a50e0mtk34t8n",
