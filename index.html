@@ -749,7 +749,7 @@ function importProductsExcel(e){
 
       if(idx.name<0){toast("'Ürün Adı' kolonu zorunlu","error");return;}
 
-      let added=0,updated=0,newCats=0,skippedNoName=0,duplicateInFile=0;
+      let added=0,updated=0,newCats=0,skippedNoName=0;
       const catByName={};state.categories.forEach(c=>catByName[c.name.toLowerCase()]=c);
       const findOrCreateCat=name=>{
         if(!name)return null;
@@ -760,9 +760,6 @@ function importProductsExcel(e){
       const toNum=v=>{if(v==null||v=="")return 0;const s=String(v).replace(/\./g,"").replace(",",".");const n=parseFloat(s);return isNaN(n)?0:n;};
       const nameKey = s => String(s||"").trim().toLocaleLowerCase("tr-TR");
 
-      const seenCodes = new Set();
-      const seenNames = new Set();
-
       for(let i=1;i<rows.length;i++){
         const r=rows[i];
         const name=String(r[idx.name]||"").trim();
@@ -770,14 +767,6 @@ function importProductsExcel(e){
 
         const rawCode = idx.code >= 0 ? String(r[idx.code] || "").trim() : "";
         const nKey = nameKey(name);
-
-        if(rawCode){
-          if(seenCodes.has(rawCode)){ duplicateInFile++; continue; }
-          seenCodes.add(rawCode);
-        } else {
-          if(seenNames.has(nKey)){ duplicateInFile++; continue; }
-          seenNames.add(nKey);
-        }
 
         const doc={
           name,
@@ -790,29 +779,31 @@ function importProductsExcel(e){
           description:idx.description>=0?String(r[idx.description]||"").trim():""
         };
 
+        // ✨ GÜNCELLEME: Hem sistemdeki mevcut ürünleri hem de bu yükleme döngüsünde saniyeler önce eklenmiş ürünleri tarar.
         let existing = null;
         if(rawCode){
+          // Kod doluysa: Hem kodu hem de ismi uyuşan ürünü arar.
           existing = state.products.find(p => p.code && p.code === rawCode && nameKey(p.name) === nKey);
         } else {
+          // Kod boşsa: Sadece ismi uyuşan ürünü arar.
           existing = state.products.find(p => nameKey(p.name) === nKey);
         }
 
         if(existing){
-          // ✨ DEĞİŞİKLİK BURADA: Excel'den gelen yeni miktarı, sistemdeki eski miktarla toplayarak güncelliyoruz
+          // Eğer ürün bulunduysa (ister sistemde önceden var olsun, ister Excel'in birkaç satır yukarısında yeni eklenmiş olsun)
           const oldQuantity = toNum(existing.quantity);
           const incomingQuantity = doc.quantity;
           
           const patch = {...doc};
           if(rawCode){ patch.code = rawCode; }
           
-          // Nesneleri birleştir
           Object.assign(existing, patch, {updated_at:nowISO()});
           
-          // Stok miktarını ezmek yerine eski + yeni şeklinde topla
+          // Stokları birbirine ekle
           existing.quantity = oldQuantity + incomingQuantity;
-          
           updated++;
         } else {
+          // Ürün ne sistemde ne de Excel'in üst satırlarında yoksa tamamen yeni bir kayıt olarak eklenir.
           const finalCode = rawCode || ("VK-" + Math.floor(10000 + Math.random() * 90000));
           state.products.push({id:uid(),code:finalCode,...doc,created_at:nowISO(),updated_at:nowISO()});
           added++;
@@ -821,8 +812,7 @@ function importProductsExcel(e){
       save();renderProducts();
       const parts = [
         added+" yeni",
-        updated+" güncellendi (Stoklar Eklendi)",
-        duplicateInFile+" dosya-içi tekrar atlandı",
+        updated+" güncellendi (Stoklar Birleştirildi)",
         skippedNoName+" ad-eksik atlandı"
       ];
       if(newCats) parts.push(newCats+" yeni kategori");
