@@ -1329,13 +1329,13 @@
       "name": "RFID USB KİLİT PROGRAMLAMA KABLO SETİ",
       "category_id": "id-fmh7hoscmtk34t8n",
       "unit": "adet",
-      "quantity": 28,
+      "quantity": 27,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "CABLE RJ12 TO USB ADAPTER VE SERVICE CABLE RJ12 FOR 3/4G RFID LCU & E-CYLINDER",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-02T12:41:24.743Z"
+      "updated_at": "2026-09-03T06:30:40.012Z"
     },
     {
       "id": "id-gt8a50e0mtk34t8n",
@@ -5104,6 +5104,20 @@
       "user_name": "CAN EKEYILMAZ",
       "happened_at": "2026-09-03T06:30:27.112Z",
       "created_at": "2026-09-03T06:30:27.112Z"
+    },
+    {
+      "id": "id-4829z37qmtl5bvrg",
+      "product_id": "id-elerotk3mtk34t8n",
+      "product_code": "686001061  686001050",
+      "product_name": "RFID USB KİLİT PROGRAMLAMA KABLO SETİ",
+      "type": "out",
+      "quantity": 1,
+      "target_location": "Ana Depo",
+      "reason": "Accor Ofise Update için ayrıldı",
+      "user_id": "id-tejy3dmpmtk2yr8i",
+      "user_name": "CAN EKEYILMAZ",
+      "happened_at": "2026-09-03T06:30:40.012Z",
+      "created_at": "2026-09-03T06:30:40.012Z"
     }
   ],
   "settings": {
