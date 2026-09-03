@@ -6636,13 +6636,13 @@
       "name": "A28 STD KARŞILIK SATIN CHROME",
       "category_id": "id-4gkyupz3mtk34t8p",
       "unit": "adet",
-      "quantity": 114,
+      "quantity": 115,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "STRIKER PLATE ANSI, STSTEEL",
       "created_at": "2026-09-03T08:29:16.238Z",
-      "updated_at": "2026-09-03T08:29:16.238Z"
+      "updated_at": "2026-09-03T08:33:32.893Z"
     },
     {
       "id": "id-fwvr5ufzmtl9keoe",
@@ -7779,6 +7779,20 @@
       "user_name": "Ali ÖZEN",
       "happened_at": "2026-09-03T08:33:14.765Z",
       "created_at": "2026-09-03T08:33:14.765Z"
+    },
+    {
+      "id": "id-wcrs5by2mtl9pwpp",
+      "product_id": "id-t6otamg1mtl9keoe",
+      "product_code": "458633522",
+      "product_name": "A28 STD KARŞILIK SATIN CHROME",
+      "type": "in",
+      "quantity": 1,
+      "target_location": "Ana Depo",
+      "reason": null,
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "Ali ÖZEN",
+      "happened_at": "2026-09-03T08:33:32.893Z",
+      "created_at": "2026-09-03T08:33:32.893Z"
     }
   ],
   "settings": {
