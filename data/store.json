@@ -7854,7 +7854,7 @@
       "low_stock_list": true,
       "recent_additions": true,
       "valuable_products": false,
-      "category_distribution": true
+      "category_distribution": false
     },
     "menus": {
       "dashboard": true,
