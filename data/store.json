@@ -1074,12 +1074,12 @@
       "category_id": "id-90e6qm0jmtk34t8n",
       "unit": "adet",
       "quantity": 30,
-      "critical_level": 0,
+      "critical_level": 20,
       "unit_price": 0,
       "location": "",
       "description": "ALLURE  FOR ETHERNET LOCK INTERFACE",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-02T12:41:24.743Z"
+      "updated_at": "2026-09-03T07:25:11.184Z"
     },
     {
       "id": "id-pm4wkov3mtk34t8n",
