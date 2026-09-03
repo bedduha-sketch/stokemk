@@ -458,12 +458,12 @@
       "category_id": "id-fzyrvbu6mtk34t8m",
       "unit": "adet",
       "quantity": 684,
-      "critical_level": 0,
+      "critical_level": 500,
       "unit_price": 0,
       "location": "",
       "description": "RFID KEYCARD MIFARE PLUS EV1 4K STANDARD PRINT",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-02T12:41:24.743Z"
+      "updated_at": "2026-09-03T07:21:37.693Z"
     },
     {
       "id": "id-85afzefcmtk34t8n",
