@@ -931,12 +931,12 @@
       "category_id": "id-9kw5lsavmtk34t8n",
       "unit": "adet",
       "quantity": 11,
-      "critical_level": 0,
+      "critical_level": 5,
       "unit_price": 0,
       "location": "",
       "description": "",
       "created_at": "2026-09-03T08:29:16.163Z",
-      "updated_at": "2026-09-03T09:05:56.360Z"
+      "updated_at": "2026-09-03T09:22:34.551Z"
     },
     {
       "id": "id-y8zqh5bvmtl9kemb",
