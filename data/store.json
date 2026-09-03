@@ -875,12 +875,12 @@
       "category_id": "id-fzyrvbu6mtk34t8m",
       "unit": "adet",
       "quantity": 500,
-      "critical_level": 0,
+      "critical_level": 200,
       "unit_price": 0,
       "location": "",
       "description": "EXPIRED-MIFARE PLUS EV1 2EK",
       "created_at": "2026-09-03T08:29:16.163Z",
-      "updated_at": "2026-09-03T08:29:16.163Z"
+      "updated_at": "2026-09-03T09:22:15.367Z"
     },
     {
       "id": "id-na7adfzwmtl9kemb",
