@@ -581,12 +581,12 @@
       "category_id": "id-fzyrvbu6mtk34t8m",
       "unit": "adet",
       "quantity": 790,
-      "critical_level": 0,
+      "critical_level": 500,
       "unit_price": 0,
       "location": "",
       "description": "RFID KEYCARD UL AES 144B WHITE",
       "created_at": "2026-09-03T08:29:16.163Z",
-      "updated_at": "2026-09-03T08:29:16.163Z"
+      "updated_at": "2026-09-03T09:21:45.212Z"
     },
     {
       "id": "id-0ykya8g2mtl9kemb",
