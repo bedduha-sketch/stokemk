@@ -948,12 +948,12 @@
       "category_id": "id-90e6qm0jmtk34t8n",
       "unit": "adet",
       "quantity": 7,
-      "critical_level": 0,
+      "critical_level": 5,
       "unit_price": 0,
       "location": "",
       "description": "Cable Assy. D03 - NC Type 3, 0.5 meter",
       "created_at": "2026-09-02T12:41:24.743Z",
-      "updated_at": "2026-09-02T12:41:24.743Z"
+      "updated_at": "2026-09-03T07:24:12.312Z"
     },
     {
       "id": "id-fcr5uukcmtk34t8n",
