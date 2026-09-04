@@ -4598,13 +4598,13 @@
       "name": "42MM BLACK TITANUM PVD",
       "category_id": "id-9lekwlyemtk34t8o",
       "unit": "adet",
-      "quantity": 7,
+      "quantity": 6,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "CYL 3-LEV THREAD 5536K BLACK T WO/LOGO 42MM",
       "created_at": "2026-09-03T08:29:16.189Z",
-      "updated_at": "2026-09-03T08:29:16.189Z"
+      "updated_at": "2026-09-04T11:06:07.110Z"
     },
     {
       "id": "id-2chxcx6xmtl9ken1",
@@ -7911,6 +7911,20 @@
       "user_name": "Ali ÖZEN",
       "happened_at": "2026-09-04T11:05:32.760Z",
       "created_at": "2026-09-04T11:05:32.760Z"
+    },
+    {
+      "id": "id-iy0nm85ymtmulyti",
+      "product_id": "id-vmy5jq7dmtl9ken1",
+      "product_code": "4812635905V42",
+      "product_name": "42MM BLACK TITANUM PVD",
+      "type": "out",
+      "quantity": 1,
+      "target_location": "hyatt regency etro residence",
+      "reason": "mock-up oda için",
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "Ali ÖZEN",
+      "happened_at": "2026-09-04T11:06:07.110Z",
+      "created_at": "2026-09-04T11:06:07.110Z"
     }
   ],
   "settings": {
