@@ -455,6 +455,12 @@
       "name": "39 kalamış otel",
       "kind": "diger",
       "auto_created": true
+    },
+    {
+      "id": "id-zsqzo76qmtmm6rf1",
+      "name": "DoubleThree By hilton old town",
+      "kind": "diger",
+      "auto_created": true
     }
   ],
   "products": [
@@ -1752,13 +1758,13 @@
       "name": "RFID USB KİLİT PROGRAMLAMA KABLO SETİ",
       "category_id": "id-fmh7hoscmtk34t8n",
       "unit": "adet",
-      "quantity": 25,
+      "quantity": 24,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "CABLE RJ12 TO USB ADAPTER VE SERVICE CABLE RJ12 FOR 3/4G RFID LCU & E-CYLINDER",
       "created_at": "2026-09-03T08:29:16.167Z",
-      "updated_at": "2026-09-04T07:09:31.192Z"
+      "updated_at": "2026-09-04T07:10:20.749Z"
     },
     {
       "id": "id-1ey0prynmtl9kemf",
@@ -7851,6 +7857,20 @@
       "user_name": "Ali ÖZEN",
       "happened_at": "2026-09-04T07:09:31.192Z",
       "created_at": "2026-09-04T07:09:31.192Z"
+    },
+    {
+      "id": "id-76e1whnamtmm6rf1",
+      "product_id": "id-de0o30vlmtl9kemf",
+      "product_code": "686001061  686001050",
+      "product_name": "RFID USB KİLİT PROGRAMLAMA KABLO SETİ",
+      "type": "out",
+      "quantity": 1,
+      "target_location": "DoubleThree By hilton old town",
+      "reason": "sipariş",
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "Ali ÖZEN",
+      "happened_at": "2026-09-04T07:10:20.749Z",
+      "created_at": "2026-09-04T07:10:20.749Z"
     }
   ],
   "settings": {
