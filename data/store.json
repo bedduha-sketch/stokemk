@@ -461,6 +461,12 @@
       "name": "DoubleThree By hilton old town",
       "kind": "diger",
       "auto_created": true
+    },
+    {
+      "id": "id-yp6olgucmtmsue1b",
+      "name": "ofis",
+      "kind": "diger",
+      "auto_created": true
     }
   ],
   "products": [
@@ -960,13 +966,13 @@
       "name": "STRIKE",
       "category_id": "id-u7njhpesmtk34t8n",
       "unit": "adet",
-      "quantity": 1,
+      "quantity": 0,
       "critical_level": 5,
       "unit_price": 0,
       "location": "",
       "description": "",
       "created_at": "2026-09-03T08:29:16.163Z",
-      "updated_at": "2026-09-03T09:22:44.923Z"
+      "updated_at": "2026-09-04T10:16:40.847Z"
     },
     {
       "id": "id-rwdyuqj4mtl9kemb",
@@ -7871,6 +7877,20 @@
       "user_name": "Ali ÖZEN",
       "happened_at": "2026-09-04T07:10:20.749Z",
       "created_at": "2026-09-04T07:10:20.749Z"
+    },
+    {
+      "id": "id-bpcn65zimtmsue1b",
+      "product_id": "id-9e4kw08nmtl9kemb",
+      "product_code": "YOK",
+      "product_name": "STRIKE",
+      "type": "out",
+      "quantity": 1,
+      "target_location": "ofis",
+      "reason": "arızalı",
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "Ali ÖZEN",
+      "happened_at": "2026-09-04T10:16:40.847Z",
+      "created_at": "2026-09-04T10:16:40.847Z"
     }
   ],
   "settings": {
