@@ -467,6 +467,12 @@
       "name": "ofis",
       "kind": "diger",
       "auto_created": true
+    },
+    {
+      "id": "id-g92jrdxhmtmul8bc",
+      "name": "hyatt regency etro residence",
+      "kind": "diger",
+      "auto_created": true
     }
   ],
   "products": [
@@ -4606,13 +4612,13 @@
       "name": "42MM LIGHT BRONZE",
       "category_id": "id-9lekwlyemtk34t8o",
       "unit": "adet",
-      "quantity": 5,
+      "quantity": 3,
       "critical_level": 0,
       "unit_price": 0,
       "location": "",
       "description": "CYL 3-LEV THREAD 5536K LIGHTBRZ WO/LOGO 42MM",
       "created_at": "2026-09-03T08:29:16.189Z",
-      "updated_at": "2026-09-03T08:29:16.189Z"
+      "updated_at": "2026-09-04T11:05:32.761Z"
     },
     {
       "id": "id-yybewuahmtl9ken2",
@@ -7891,6 +7897,20 @@
       "user_name": "Ali ÖZEN",
       "happened_at": "2026-09-04T10:16:40.847Z",
       "created_at": "2026-09-04T10:16:40.847Z"
+    },
+    {
+      "id": "id-7s7nxd02mtmul8bc",
+      "product_id": "id-2chxcx6xmtl9ken1",
+      "product_code": "4812635055V42",
+      "product_name": "42MM LIGHT BRONZE",
+      "type": "out",
+      "quantity": 2,
+      "target_location": "hyatt regency etro residence",
+      "reason": "mock-up oda için 1 adet fp anahtar ile",
+      "user_id": "id-umv29fzpmtk3a4nj",
+      "user_name": "Ali ÖZEN",
+      "happened_at": "2026-09-04T11:05:32.760Z",
+      "created_at": "2026-09-04T11:05:32.760Z"
     }
   ],
   "settings": {
